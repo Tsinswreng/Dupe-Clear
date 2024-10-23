@@ -4,10 +4,8 @@ using Avalonia.Controls;
 
 namespace DupeClear.Views;
 
-public partial class MainWindow : Window
-{
-    public MainWindow()
-    {
-        InitializeComponent();
-    }
+public partial class MainWindow : Window{
+	public MainWindow(){
+		InitializeComponent();
+	}
 }
