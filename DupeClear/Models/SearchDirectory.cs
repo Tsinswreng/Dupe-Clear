@@ -9,68 +9,69 @@ namespace DupeClear.Models;
 
 public class SearchDirectory : INotifyPropertyChanged
 {
-    private readonly IFileService? _fileService;
+	private readonly IFileService? _fileService;
 
-    public string Name { get; }
 
-    public string FullName { get; }
+	public string Name { get; }
 
-    private bool _includeSubdirectories;
-    public bool IncludeSubdirectories
-    {
-        get => _includeSubdirectories;
-        set
-        {
-            if (_includeSubdirectories != value)
-            {
-                _includeSubdirectories = value;
-                OnPropertyChanged();
-            }
-        }
-    }
+	public string FullName { get; }
 
-    private bool _isMarked;
-    public bool IsMarked
-    {
-        get => _isMarked;
-        set
-        {
-            if (_isMarked != value)
-            {
-                _isMarked = value;
-                OnPropertyChanged();
-            }
-        }
-    }
+	private bool _includeSubdirectories;
+	public bool IncludeSubdirectories
+	{
+		get => _includeSubdirectories;
+		set
+		{
+			if (_includeSubdirectories != value)
+			{
+				_includeSubdirectories = value;
+				OnPropertyChanged();
+			}
+		}
+	}
 
-    private bool _isExcluded;
-    public bool IsExcluded
-    {
-        get => _isExcluded;
-        set
-        {
-            if (_isExcluded != value)
-            {
-                _isExcluded = value;
-                OnPropertyChanged();
-            }
-        }
-    }
+	private bool _isMarked;
+	public bool IsMarked
+	{
+		get => _isMarked;
+		set
+		{
+			if (_isMarked != value)
+			{
+				_isMarked = value;
+				OnPropertyChanged();
+			}
+		}
+	}
 
-    public Avalonia.Media.Imaging.Bitmap? FolderIcon => _fileService?.GetFolderIcon(FullName);
+	private bool _isExcluded;
+	public bool IsExcluded
+	{
+		get => _isExcluded;
+		set
+		{
+			if (_isExcluded != value)
+			{
+				_isExcluded = value;
+				OnPropertyChanged();
+			}
+		}
+	}
 
-    public SearchDirectory(string fullName, IFileService? fileService = null)
-    {
-        _fileService = fileService;
+	public Avalonia.Media.Imaging.Bitmap? FolderIcon => _fileService?.GetFolderIcon(FullName);
 
-        Name = new DirectoryInfo(fullName).Name;
-        FullName = fullName;
-    }
+	public SearchDirectory(string fullName, IFileService? fileService = null)
+	{
+		_fileService = fileService;
 
-    public event PropertyChangedEventHandler? PropertyChanged;
+		Name = new DirectoryInfo(fullName).Name;
+		FullName = fullName;
+	}
 
-    protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
+	public event PropertyChangedEventHandler? PropertyChanged;
+
+	protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+	{
+		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+	}
 }

@@ -2,7 +2,6 @@
 
 namespace DupeClear.Models;
 
-public enum Theme
-{
-    Auto, Dark, Light
+public enum Theme{
+	Auto, Dark, Light
 }
