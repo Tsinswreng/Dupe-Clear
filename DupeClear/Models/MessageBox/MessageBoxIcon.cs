@@ -4,15 +4,15 @@ namespace DupeClear.Models.MessageBox;
 
 public enum MessageBoxIcon
 {
-    None,
+	None,
 
-    Information,
+	Information,
 
-    Question,
+	Question,
 
-    Warning,
+	Warning,
 
-    Error,
+	Error,
 
-    AppIcon
+	AppIcon
 }

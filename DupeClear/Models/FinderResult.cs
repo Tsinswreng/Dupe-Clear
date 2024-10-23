@@ -6,11 +6,11 @@ namespace DupeClear.Models;
 
 public class FinderResult
 {
-    public int DuplicateCount { get; set; }
+	public int DuplicateCount { get; set; }
 
-    public List<DuplicateFile> Files { get; } = [];
+	public List<DuplicateFile> Files { get; } = [];
 
-    public List<SearchDirectory> ExcludedDirectories { get; } = [];
+	public List<SearchDirectory> ExcludedDirectories { get; } = [];
 
-    public Dictionary<string, string> Errors { get; } = [];
+	public Dictionary<string, string> Errors { get; } = [];
 }

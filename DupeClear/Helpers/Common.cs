@@ -4,9 +4,8 @@ using System.Threading.Tasks;
 
 namespace DupeClear.Helpers;
 
-public static class Common
-{
-    public delegate Task<string?> FilePickerDelegate(string? title = null);
+public static class Common{
+	public delegate Task<string?> FilePickerDelegate(string? title = null);
 
-    public delegate Task<string?> FileSaverDelegate(string? title = null, string? fileName = null);
+	public delegate Task<string?> FileSaverDelegate(string? title = null, string? fileName = null);
 }

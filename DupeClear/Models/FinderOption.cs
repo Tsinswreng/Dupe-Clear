@@ -7,21 +7,21 @@ namespace DupeClear.Models;
 [Flags]
 public enum FinderOption
 {
-    None = 0,
+	None = 0,
 
-    SameFileName = 2,
+	SameFileName = 2,
 
-    SameContents = 4,
+	SameContents = 4,
 
-    SameType = 8,
+	SameType = 8,
 
-    SameSize = 16,
+	SameSize = 16,
 
-    AcrossDirectories = 32,
+	AcrossDirectories = 32,
 
-    ExcludeSubdirectories = 64,
+	ExcludeSubdirectories = 64,
 
-    ExcludeSystemFiles = 128,
+	ExcludeSystemFiles = 128,
 
-    ExcludeHiddenFiles = 256
+	ExcludeHiddenFiles = 256
 }

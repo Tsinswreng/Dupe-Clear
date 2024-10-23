@@ -4,17 +4,17 @@ namespace DupeClear.Models;
 
 public enum MarkingCriteria
 {
-    Custom,
+	Custom,
 
-    LatestModified,
+	LatestModified,
 
-    EarliestModified,
+	EarliestModified,
 
-    LatestCreated,
+	LatestCreated,
 
-    EarliestCreated,
+	EarliestCreated,
 
-    BiggestLength,
+	BiggestLength,
 
-    SmallestLength
+	SmallestLength
 }

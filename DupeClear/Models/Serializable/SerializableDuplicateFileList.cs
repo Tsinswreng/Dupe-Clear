@@ -6,7 +6,7 @@ namespace DupeClear.Models.Serializable;
 
 public class SerializableDuplicateFileList
 {
-    public int MarkingCriteria { get; set; }
+	public int MarkingCriteria { get; set; }
 
-    public List<SerializableDuplicateFile> Files { get; set; } = [];
+	public List<SerializableDuplicateFile> Files { get; set; } = [];
 }
