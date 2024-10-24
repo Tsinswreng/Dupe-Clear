@@ -1868,32 +1868,33 @@ public partial class MainViewModel : ViewModelBase {
 	[RelayCommand]
 	private void ShowAbout(object? arg) {
 		var assm = Assembly.GetEntryAssembly();
-		if (assm != null) {
-			var name = assm.GetCustomAttribute<AssemblyProductAttribute>()?.Product;
-			var version = assm.GetName().Version;
-			var copyright = assm.GetCustomAttribute<AssemblyCopyrightAttribute>()?.Copyright;
-			MessageBox?.Invoke(new MessageBoxViewModel() {
-				Title = "About",
-				Header = $"{name} v{version}",
-				Message = $"{copyright}",
-				Icon = MessageBoxIcon.AppIcon,
-				CustomButton1Content = "_License",
-				CustomButton1Action = new Action(() => {
-					if (File.Exists("LICENSE")) {
-						MessageBox?.Invoke(new MessageBoxViewModel() {
-							Title = "License",
-							SecondaryMessage = File.ReadAllText("LICENSE"),
-							SecondaryMessageWrapped = false
-						});
-					}
-					else {
-						_fileService?.LaunchUrl(@"https://www.gnu.org/licenses/gpl-3.0.en.html#license-text");
-					}
-				}),
-				HyperlinkButtonContent = Constants.AppHomepage,
-				HyperlinkButtonAction = new Action(() => _fileService?.LaunchUrl(Constants.AppHomepage))
-			});
+		if (assm == null) {
+			return;
 		}
+		var name = assm.GetCustomAttribute<AssemblyProductAttribute>()?.Product;
+		var version = assm.GetName().Version;
+		var copyright = assm.GetCustomAttribute<AssemblyCopyrightAttribute>()?.Copyright;
+		MessageBox?.Invoke(new MessageBoxViewModel() { //MessageBoxViewModelˋ自定義也
+			Title = "About",
+			Header = $"{name} v{version}",
+			Message = $"{copyright}",
+			Icon = MessageBoxIcon.AppIcon,
+			CustomButton1Content = "_License",
+			CustomButton1Action = new Action(() => {
+				if (File.Exists("LICENSE")) {
+					MessageBox?.Invoke(new MessageBoxViewModel() {
+						Title = "License",
+						SecondaryMessage = File.ReadAllText("LICENSE"),
+						SecondaryMessageWrapped = false
+					});
+				}
+				else {
+					_fileService?.LaunchUrl(@"https://www.gnu.org/licenses/gpl-3.0.en.html#license-text");
+				}
+			}),
+			HyperlinkButtonContent = Constants.AppHomepage,
+			HyperlinkButtonAction = new Action(() => _fileService?.LaunchUrl(Constants.AppHomepage))
+		});
 	}
 
 	private bool GetIfNotBusy(object? arg) {

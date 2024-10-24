@@ -1,5 +1,5 @@
 ﻿// Copyright (C) 2024 Antik Mozib. All rights reserved.
-
+/*# 彈窗、帶有一OK按鈕 一取消按鈕 與兩個他ʹ按鈕 */
 using CommunityToolkit.Mvvm.Input;
 using DupeClear.Models.MessageBox;
 using System;
@@ -9,28 +9,22 @@ using System.Threading.Tasks;
 
 namespace DupeClear.ViewModels;
 
-public partial class MessageBoxViewModel : ViewModelBase
-{
+public partial class MessageBoxViewModel : ViewModelBase {
 	private readonly string? _appTitle;
 
 	public Func<string?, Task>? AsyncClipboardCopier { get; set; } = null;
 
 	private string? _title;
-	public string? Title
-	{
-		get
-		{
-			if (string.IsNullOrEmpty(_title))
-			{
+	public string? Title {
+		get {
+			if (string.IsNullOrEmpty(_title)) {
 				return _appTitle;
 			}
 
 			return _title;
 		}
-		set
-		{
-			if (_title != value)
-			{
+		set {
+			if (_title != value) {
 				_title = value;
 				OnPropertyChanged();
 			}
@@ -77,64 +71,55 @@ public partial class MessageBoxViewModel : ViewModelBase
 
 	public event EventHandler? Closed;
 
-	public MessageBoxViewModel()
-	{
+	public MessageBoxViewModel() {
 		var assm = Assembly.GetEntryAssembly();
-		if (assm != null)
-		{
-			var appTitle = assm.GetCustomAttribute<AssemblyProductAttribute>()?.Product;
-			_appTitle = appTitle;
+		if (assm != null) {
+			return;
 		}
+		var appTitle = assm!.GetCustomAttribute<AssemblyProductAttribute>()?.Product;
+		_appTitle = appTitle;
+
 	}
 
-	public void Close(bool? dialogResult = null)
-	{
+	public void Close(bool? dialogResult = null) {
 		Result.CheckBoxChecked = CheckBoxChecked;
 		Result.DialogResult = dialogResult;
 		RaiseEvent(Closed);
 	}
 
 	[RelayCommand]
-	private async Task CopyToClipboardAsync(object? arg)
-	{
-		if (AsyncClipboardCopier != null)
-		{
+	private async Task CopyToClipboardAsync(object? arg) {
+		if (AsyncClipboardCopier != null) {
 			await AsyncClipboardCopier.Invoke(SecondaryMessage);
 		}
 	}
 
 	[RelayCommand]
-	private void OKButton(object? arg)
-	{
+	private void OKButton(object? arg) {
 		Close(true);
 	}
 
 	[RelayCommand]
-	private void CancelButton(object? arg)
-	{
+	private void CancelButton(object? arg) {
 		Close(false);
 	}
 
 	[RelayCommand]
-	private void HyperlinkButton(object? arg)
-	{
+	private void HyperlinkButton(object? arg) {
 		HyperlinkButtonAction?.Invoke();
 	}
 
 	[RelayCommand]
-	private void CustomButton1(object? arg)
-	{
+	private void CustomButton1(object? arg) {
 		CustomButton1Action?.Invoke();
 	}
 
 	[RelayCommand]
-	private void CustomButton2(object? arg)
-	{
+	private void CustomButton2(object? arg) {
 		CustomButton2Action?.Invoke();
 	}
 
-	protected void RaiseEvent(EventHandler? handler)
-	{
+	protected void RaiseEvent(EventHandler? handler) {
 		handler?.Invoke(this, new EventArgs());
 	}
 }
