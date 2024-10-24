@@ -2,8 +2,7 @@
 
 namespace DupeClear.Models.MessageBox;
 
-public enum MessageBoxIcon
-{
+public enum MessageBoxIcon {
 	None,
 
 	Information,

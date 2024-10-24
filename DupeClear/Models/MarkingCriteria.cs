@@ -2,8 +2,7 @@
 
 namespace DupeClear.Models;
 
-public enum MarkingCriteria
-{
+public enum MarkingCriteria {
 	Custom,
 
 	LatestModified,

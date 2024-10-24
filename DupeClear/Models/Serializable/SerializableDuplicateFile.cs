@@ -4,8 +4,7 @@ using System;
 
 namespace DupeClear.Models.Serializable;
 
-public class SerializableDuplicateFile
-{
+public class SerializableDuplicateFile {
 	public DateTime Created { get; set; }
 
 	public string? FullName { get; set; }

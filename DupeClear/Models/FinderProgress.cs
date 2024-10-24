@@ -2,8 +2,7 @@
 
 namespace DupeClear.Models;
 
-public struct FinderProgress
-{
+public struct FinderProgress {
 	/// <summary>
 	/// Number of files searched so far.
 	/// </summary>

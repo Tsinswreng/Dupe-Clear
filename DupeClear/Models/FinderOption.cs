@@ -5,8 +5,7 @@ using System;
 namespace DupeClear.Models;
 
 [Flags]
-public enum FinderOption
-{
+public enum FinderOption {
 	None = 0,
 
 	SameFileName = 2,

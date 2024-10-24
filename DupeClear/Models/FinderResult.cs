@@ -4,8 +4,7 @@ using System.Collections.Generic;
 
 namespace DupeClear.Models;
 
-public class FinderResult
-{
+public class FinderResult {
 	public int DuplicateCount { get; set; }
 
 	public List<DuplicateFile> Files { get; } = [];

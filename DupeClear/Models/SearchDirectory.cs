@@ -7,8 +7,7 @@ using System.Runtime.CompilerServices;
 
 namespace DupeClear.Models;
 
-public class SearchDirectory : INotifyPropertyChanged
-{
+public class SearchDirectory : INotifyPropertyChanged {
 	private readonly IFileService? _fileService;
 
 
@@ -17,13 +16,10 @@ public class SearchDirectory : INotifyPropertyChanged
 	public string FullName { get; }
 
 	private bool _includeSubdirectories;
-	public bool IncludeSubdirectories
-	{
+	public bool IncludeSubdirectories {
 		get => _includeSubdirectories;
-		set
-		{
-			if (_includeSubdirectories != value)
-			{
+		set {
+			if (_includeSubdirectories != value) {
 				_includeSubdirectories = value;
 				OnPropertyChanged();
 			}
@@ -31,13 +27,10 @@ public class SearchDirectory : INotifyPropertyChanged
 	}
 
 	private bool _isMarked;
-	public bool IsMarked
-	{
+	public bool IsMarked {
 		get => _isMarked;
-		set
-		{
-			if (_isMarked != value)
-			{
+		set {
+			if (_isMarked != value) {
 				_isMarked = value;
 				OnPropertyChanged();
 			}
@@ -45,13 +38,10 @@ public class SearchDirectory : INotifyPropertyChanged
 	}
 
 	private bool _isExcluded;
-	public bool IsExcluded
-	{
+	public bool IsExcluded {
 		get => _isExcluded;
-		set
-		{
-			if (_isExcluded != value)
-			{
+		set {
+			if (_isExcluded != value) {
 				_isExcluded = value;
 				OnPropertyChanged();
 			}
@@ -60,8 +50,7 @@ public class SearchDirectory : INotifyPropertyChanged
 
 	public Avalonia.Media.Imaging.Bitmap? FolderIcon => _fileService?.GetFolderIcon(FullName);
 
-	public SearchDirectory(string fullName, IFileService? fileService = null)
-	{
+	public SearchDirectory(string fullName, IFileService? fileService = null) {
 		_fileService = fileService;
 
 		Name = new DirectoryInfo(fullName).Name;
@@ -70,8 +59,7 @@ public class SearchDirectory : INotifyPropertyChanged
 
 	public event PropertyChangedEventHandler? PropertyChanged;
 
-	protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-	{
+	protected void OnPropertyChanged([CallerMemberName] string? propertyName = null) {
 		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 	}
 }

@@ -4,8 +4,7 @@ using System.Collections.Generic;
 
 namespace DupeClear.Models.Serializable;
 
-public class SerializableDuplicateFileList
-{
+public class SerializableDuplicateFileList {
 	public int MarkingCriteria { get; set; }
 
 	public List<SerializableDuplicateFile> Files { get; set; } = [];

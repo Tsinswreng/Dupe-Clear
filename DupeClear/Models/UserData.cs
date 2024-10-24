@@ -7,8 +7,7 @@ using System.Collections.Generic;
 
 namespace DupeClear.Models;
 
-public class UserData
-{
+public class UserData {
 	public List<SerializableSearchDirectory> IncludedDirectories { get; set; } = [];
 
 	public List<SerializableSearchDirectory> ExcludedDirectories { get; set; } = [];

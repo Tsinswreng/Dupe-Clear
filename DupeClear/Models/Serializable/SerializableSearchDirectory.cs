@@ -2,8 +2,7 @@
 
 namespace DupeClear.Models.Serializable;
 
-public class SerializableSearchDirectory
-{
+public class SerializableSearchDirectory {
 	public string? FullName { get; set; }
 
 	public bool IsMarked { get; set; }

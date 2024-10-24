@@ -10,8 +10,7 @@ using System.Text.RegularExpressions;
 
 namespace DupeClear.Models;
 
-public class DuplicateFile : INotifyPropertyChanged
-{
+public class DuplicateFile : INotifyPropertyChanged {
 	private readonly IFileService? _fileService;
 
 	public DateTime Created { get; }
@@ -23,13 +22,10 @@ public class DuplicateFile : INotifyPropertyChanged
 	public string FullName { get; }
 
 	private int? _group;
-	public int? Group
-	{
+	public int? Group {
 		get => _group;
-		set
-		{
-			if (_group != value)
-			{
+		set {
+			if (_group != value) {
 				_group = value;
 				OnPropertyChanged();
 			}
@@ -43,13 +39,10 @@ public class DuplicateFile : INotifyPropertyChanged
 	public bool IsHidden { get; }
 
 	private bool _isMarked;
-	public bool IsMarked
-	{
+	public bool IsMarked {
 		get => _isMarked;
-		set
-		{
-			if (_isMarked != value)
-			{
+		set {
+			if (_isMarked != value) {
 				_isMarked = value;
 
 				OnPropertyChanged();
@@ -68,16 +61,12 @@ public class DuplicateFile : INotifyPropertyChanged
 	public string NameWithoutExtension { get; }
 
 	private Match? _patternMatch;
-	public Match? PatternMatch
-	{
+	public Match? PatternMatch {
 		get => _patternMatch;
-		set
-		{
-			if (_patternMatch != value)
-			{
+		set {
+			if (_patternMatch != value) {
 				_patternMatch = value;
-				if (value != null && value.Success && PatternMatchValue != value.Value)
-				{
+				if (value != null && value.Success && PatternMatchValue != value.Value) {
 					PatternMatchValue = value.Value;
 				}
 			}
@@ -98,8 +87,7 @@ public class DuplicateFile : INotifyPropertyChanged
 			null,
 			null,
 			null,
-			fileService)
-	{ }
+			fileService) { }
 
 	public DuplicateFile(SerializableDuplicateFile serializable, IFileService? fileService = null)
 		: this(
@@ -109,8 +97,7 @@ public class DuplicateFile : INotifyPropertyChanged
 			serializable.IsSystemFile,
 			serializable.Length,
 			serializable.Modified,
-			fileService)
-	{ }
+			fileService) { }
 
 	private DuplicateFile(
 		string? fullName,
@@ -119,14 +106,11 @@ public class DuplicateFile : INotifyPropertyChanged
 		bool? isSystemFile,
 		long? length,
 		DateTime? modified,
-		IFileService? fileService)
-	{
-		if (string.IsNullOrEmpty(fullName))
-		{
+		IFileService? fileService) {
+		if (string.IsNullOrEmpty(fullName)) {
 			throw new InvalidOperationException(nameof(fullName) + " cannot be null or empty.");
 		}
-		else
-		{
+		else {
 			_fileService = fileService;
 
 			var fi = new FileInfo(fullName);
@@ -142,29 +126,24 @@ public class DuplicateFile : INotifyPropertyChanged
 			Type = _fileService?.GetFileDescription(fullName);
 
 			var ext = Path.GetExtension(fullName);
-			if (string.IsNullOrEmpty(ext))
-			{
+			if (string.IsNullOrEmpty(ext)) {
 				NameWithoutExtension = Name;
 			}
-			else
-			{
+			else {
 				NameWithoutExtension = Name.Substring(0, Name.Length - ext.Length);
 			}
 		}
 	}
 
-	public void Refresh()
-	{
-		if (IsDeleted && IsMarked)
-		{
+	public void Refresh() {
+		if (IsDeleted && IsMarked) {
 			IsMarked = false;
 		}
 
 		OnPropertyChanged(nameof(IsDeleted));
 	}
 
-	protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-	{
+	protected void OnPropertyChanged([CallerMemberName] string? propertyName = null) {
 		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 	}
 }

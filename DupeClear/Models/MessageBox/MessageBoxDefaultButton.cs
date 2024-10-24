@@ -2,8 +2,7 @@
 
 namespace DupeClear.Models.MessageBox;
 
-public enum MessageBoxDefaultButton
-{
+public enum MessageBoxDefaultButton {
 	OK,
 
 	Cancel
