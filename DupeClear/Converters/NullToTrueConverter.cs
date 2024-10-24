@@ -6,17 +6,14 @@ using System.Globalization;
 
 namespace DupeClear.Converters;
 
-public class NullToTrueConverter : IValueConverter
-{
-    public bool Inverted { get; set; }
+public class NullToTrueConverter : IValueConverter {
+	public bool Inverted { get; set; }
 
-    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
-    {
-        return Inverted ? value != null : value == null;
-    }
+	public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture) {
+		return Inverted ? value != null : value == null;
+	}
 
-    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
-    {
-        throw new NotImplementedException();
-    }
+	public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) {
+		throw new NotImplementedException();
+	}
 }

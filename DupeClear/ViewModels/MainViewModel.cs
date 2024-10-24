@@ -1802,6 +1802,7 @@ public partial class MainViewModel : ViewModelBase {
 		return !IsBusy && DuplicateFiles.Any();
 	}
 
+	//# 頂蘭File>Theme
 	[RelayCommand]
 	private void ChangeTheme(object? arg) {
 		if (arg is Theme theme) {
@@ -1864,7 +1865,7 @@ public partial class MainViewModel : ViewModelBase {
 		return true;
 	}
 
-	//窗頂之help>about
+	//#窗頂之help>about
 	[RelayCommand]
 	private void ShowAbout(object? arg) {
 		var assm = Assembly.GetEntryAssembly();

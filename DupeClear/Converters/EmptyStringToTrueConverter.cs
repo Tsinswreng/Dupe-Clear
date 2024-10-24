@@ -6,22 +6,18 @@ using System.Globalization;
 
 namespace DupeClear.Converters;
 
-public class EmptyStringToTrueConverter : IValueConverter
-{
-    public bool Inverted { get; set; }
+public class EmptyStringToTrueConverter : IValueConverter {
+	public bool Inverted { get; set; }
 
-    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
-    {
-        if (value != null)
-        {
-            return Inverted ? !string.IsNullOrWhiteSpace(value.ToString()) : string.IsNullOrWhiteSpace(value.ToString());
-        }
+	public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture) {
+		if (value != null) {
+			return Inverted ? !string.IsNullOrWhiteSpace(value.ToString()) : string.IsNullOrWhiteSpace(value.ToString());
+		}
 
-        return !Inverted;
-    }
+		return !Inverted;
+	}
 
-    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
-    {
-        throw new NotImplementedException();
-    }
+	public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) {
+		throw new NotImplementedException();
+	}
 }

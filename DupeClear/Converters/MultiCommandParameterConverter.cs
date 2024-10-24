@@ -7,10 +7,8 @@ using System.Globalization;
 
 namespace DupeClear.Converters;
 
-public class MultiCommandParameterConverter : IMultiValueConverter
-{
-    public object? Convert(IList<object?> values, Type targetType, object? parameter, CultureInfo culture)
-    {
-        return values;
-    }
+public class MultiCommandParameterConverter : IMultiValueConverter {
+	public object? Convert(IList<object?> values, Type targetType, object? parameter, CultureInfo culture) {
+		return values;
+	}
 }

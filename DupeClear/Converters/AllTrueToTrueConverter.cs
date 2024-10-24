@@ -8,18 +8,14 @@ using System.Linq;
 
 namespace DupeClear.Converters;
 
-public class AllTrueToTrueConverter : IMultiValueConverter
-{
-    public object? Convert(IList<object?> values, Type targetType, object? parameter, CultureInfo culture)
-    {
-        return values.All(x =>
-        {
-            if (x is bool boolVal)
-            {
-                return boolVal == true;
-            }
+public class AllTrueToTrueConverter : IMultiValueConverter {
+	public object? Convert(IList<object?> values, Type targetType, object? parameter, CultureInfo culture) {
+		return values.All(x => {
+			if (x is bool boolVal) {
+				return boolVal == true;
+			}
 
-            return false;
-        });
-    }
+			return false;
+		});
+	}
 }
