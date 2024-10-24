@@ -4,10 +4,8 @@ using System.IO;
 
 namespace DupeClear.Helpers;
 
-public class JpegPatcher
-{
-	public static bool IsJpeg(Stream stream)
-	{
+public class JpegPatcher {
+	public static bool IsJpeg(Stream stream) {
 		var jpegHeader = new byte[2];
 		jpegHeader[0] = (byte)stream.ReadByte();
 		jpegHeader[1] = (byte)stream.ReadByte();
@@ -15,17 +13,14 @@ public class JpegPatcher
 		return jpegHeader[0] == 0xff && jpegHeader[1] == 0xd8;
 	}
 
-	public static bool IsJpeg(string path)
-	{
+	public static bool IsJpeg(string path) {
 		using var stream = File.OpenRead(path);
 
 		return IsJpeg(stream);
 	}
 
-	public static Stream PatchAwayExif(Stream inStream, Stream outStream)
-	{
-		if (IsJpeg(inStream))
-		{
+	public static Stream PatchAwayExif(Stream inStream, Stream outStream) {
+		if (IsJpeg(inStream)) {
 			SkipAppHeaderSection(inStream);
 		}
 
@@ -33,24 +28,20 @@ public class JpegPatcher
 		outStream.WriteByte(0xd8);
 		int readCount;
 		byte[] readBuffer = new byte[4096];
-		while ((readCount = inStream.Read(readBuffer, 0, readBuffer.Length)) > 0)
-		{
+		while ((readCount = inStream.Read(readBuffer, 0, readBuffer.Length)) > 0) {
 			outStream.Write(readBuffer, 0, readCount);
 		}
 
 		return outStream;
 	}
 
-	private static void SkipAppHeaderSection(Stream inStream)
-	{
+	private static void SkipAppHeaderSection(Stream inStream) {
 		byte[] header = [(byte)inStream.ReadByte(), (byte)inStream.ReadByte()];
-		while (header[0] == 0xff && header[1] >= 0xe0 && header[1] <= 0xef)
-		{
+		while (header[0] == 0xff && header[1] >= 0xe0 && header[1] <= 0xef) {
 			int exifLength = inStream.ReadByte();
 			exifLength <<= 8;
 			exifLength |= inStream.ReadByte();
-			for (int i = 0; i < exifLength - 2; i++)
-			{
+			for (int i = 0; i < exifLength - 2; i++) {
 				inStream.ReadByte();
 			}
 

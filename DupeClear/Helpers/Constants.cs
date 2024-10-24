@@ -4,8 +4,7 @@ using DupeClear.Models;
 
 namespace DupeClear.Helpers;
 
-public static class Constants
-{
+public static class Constants {
 	public const MarkingCriteria DefaultMarkingCriteria = MarkingCriteria.LatestModified;
 
 	public const string DefaultFileNamePattern = @"^.*?(?=\s?\(\d+\)\s*$)|^.*$";
