@@ -1,3 +1,28 @@
+## 訪問按鍵
+```xml
+<Button Content="_Add Folder"
+		Command="{Binding AddDirectoryForInclusionCommand}" />
+
+<!--Remove Folder-->
+<Button Content="_Remove Folder"
+		Command="{Binding RemoveIncludedDirectoryCommand}" />
+```
+
+在 WPF (以及 Windows Forms) 中，在 `Content` 属性值中使用下划线 `_`  是为了创建 **访问键 (Access Key)**。  访问键允许用户通过按住 Alt 键 (或某些情况下是 Ctrl 键) 并同时按下下划线后面的字符来快速激活按钮或其他控件。
+
+例如，在你的代码中：
+
+*   `Content="_Add Folder"`  创建了一个访问键，用户可以通过按 Alt+A 来激活 "Add Folder" 按钮。
+*   `Content="_Remove Folder"` 创建了一个访问键，用户可以通过按 Alt+R 来激活 "Remove Folder" 按钮。
+*   `Content="_Include Subfolders"` 创建了一个访问键，用户可以通过按 Alt+I 来激活复选框。
+
+
+这是一种提高用户界面的可用性的标准技术，特别是对于键盘导航和辅助技术用户来说非常重要。  它允许用户无需使用鼠标即可快速访问重要的 UI 元素。  WPF 自动处理下划线，将其从显示文本中移除，并将其用作访问键。  如果需要显示文字中的下划线，则需要使用两个下划线 `__`。
+
+
+因此，`Content` 属性值后面的下划线并非仅仅是视觉效果，而是具有实际功能的访问键定义。
+
+
 ## if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop){}
 [2024-10-23T20:41:07.860+08:00]
 //如果類型檢查結果為真（即 ApplicationLifetime 是 IClassicDesktopStyleApplicationLifetime 的實例），

@@ -4,6 +4,4 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace DupeClear.ViewModels;
 
-public class ViewModelBase : ObservableObject
-{
-}
+public class ViewModelBase : ObservableObject{}

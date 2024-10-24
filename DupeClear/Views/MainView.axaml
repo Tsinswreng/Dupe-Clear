@@ -21,7 +21,7 @@
 	<Design.DataContext>
 		<vm:MainViewModel />
 	</Design.DataContext>
-
+	
 	<UserControl.Resources>
 		<conv:AllTrueToTrueConverter x:Key="AllTrueToTrueConverter" />
 		<conv:BoolToInvertedBoolConverter x:Key="BoolToInvertedBoolConverter" />
@@ -42,7 +42,7 @@
 
 		<system:Int32 x:Key="IntOne">1</system:Int32>
 	</UserControl.Resources>
-
+	
 	<UserControl.Styles>
 		<Style Selector="Button,DropDownButton">
 			<Setter Property="HorizontalContentAlignment"
@@ -652,6 +652,7 @@
 					</StackPanel>
 				</Grid>
 			</TabItem>
+			<!-- ~<TabItem Header="Locations"> -->
 
 			<!--Exclusions-->
 			<TabItem Header="Exclusions">
@@ -810,6 +811,7 @@
 					</StackPanel>
 				</Grid>
 			</TabItem>
+			<!-- ~<TabItem Header="Exclusions"> -->
 
 			<!--Search Results-->
 			<TabItem Header="Search Results">
@@ -1362,7 +1364,9 @@
 					</Grid>
 				</Grid>
 			</TabItem>
+			<!-- ~<TabItem Header="Search Results"> -->
 		</TabControl>
+		<!-- ~<TabControl x:Name="MainTabControl" -->
 
 		<!--Status Bar-->
 		<Border Grid.Row="2"
