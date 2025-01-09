@@ -450,3 +450,167 @@ COM 是一种用于在 Windows 上创建可重用组件的技术。  为了处�
 **总结:**
 
 这段代码告诉 MSBuild 构建系统，当前项目需要引用一个名为 "AppUpdateService" 的程序集，并且该程序集位于 `..\Libraries\AppUpdateService.dll`。  在构建过程中，MSBuild 将使用此信息来将 "AppUpdateService.dll" 包含到项目的输出中，并确保项目能够正确地使用该程序集中的类和方法。  如果没有这个 `<Reference>` 元素，编译器将无法找到 `AppUpdateService` 中的类型，导致编译错误。
+
+
+# `[SupportedOSPlatform("windows")] 解釋`
+[2025-01-09T17:17:22.684+08:00_W2-4]
+
+##
+
+
+`[SupportedOSPlatform("windows")]` 是 .NET 6 及更高版本中引入的一个特性（Attribute），用于指示某个 API 或类在特定操作系统平台上的支持情况。以下是对该特性的详细解释：
+
+### 1. 目的
+
+- **平台兼容性**：`SupportedOSPlatform` 特性用于标记某个 API 仅在指定的操作系统平台上受支持。这有助于开发者了解在不同平台上使用特定 API 的兼容性，从而避免在不支持的平台上调用这些 API。
+
+### 2. 使用方式
+
+- **标记 API**：可以将 `SupportedOSPlatform` 特性应用于类、方法、属性等，以指示它们仅在指定的操作系统上受支持。例如，标记一个方法表示它仅在 Windows 上可用。
+
+### 3. 示例
+
+以下是如何使用 `SupportedOSPlatform` 特性的示例：
+
+```csharp
+using System;
+using System.Runtime.Versioning;
+
+public class FileOperations
+{
+    [SupportedOSPlatform("windows")]
+    public void WindowsOnlyMethod()
+    {
+        // 仅在 Windows 上支持的逻辑
+        Console.WriteLine("This method is supported on Windows.");
+    }
+}
+```
+
+### 4. 关键点
+
+- **编译时检查**：使用 `SupportedOSPlatform` 特性后，编译器可以在编译时检查代码的兼容性。如果在不支持的平台上调用了标记为 `SupportedOSPlatform("windows")` 的方法，编译器会发出警告。
+- **多平台支持**：可以为同一个 API 应用多个 `SupportedOSPlatform` 特性，以指示它在多个平台上受支持。例如，可以同时标记为 Windows 和 Linux：
+
+```csharp
+[SupportedOSPlatform("windows")]
+[SupportedOSPlatform("linux")]
+public void CrossPlatformMethod()
+{
+    // 在 Windows 和 Linux 上都支持的逻辑
+}
+```
+
+### 5. 相关特性
+
+- **`[UnsupportedOSPlatform("platformName")]`**：与 `SupportedOSPlatform` 相对的特性，用于标记某个 API 在特定平台上不受支持。
+
+### 6. 总结
+
+`[SupportedOSPlatform("windows")]` 特性是一个重要的工具，用于提高代码的可维护性和可移植性。通过明确标记 API 的平台支持情况，开发者可以更好地管理跨平台应用程序的兼容性，减少在不支持的平台上调用不兼容 API 的风险。
+
+
+# ConcurrentDictionary
+[2025-01-09T17:21:05.074+08:00_W2-4]
+
+##
+
+`ConcurrentDictionary` 是 .NET 中的一个集合类，位于 `System.Collections.Concurrent` 命名空间下。它是一个线程安全的字典实现，允许多个线程同时读写数据，而不会导致数据竞争或不一致的状态。以下是对 `ConcurrentDictionary` 的详细解释：
+
+### 1. 主要特性
+
+- **线程安全**：`ConcurrentDictionary` 设计用于在多线程环境中安全地进行并发操作。它内部使用了细粒度锁定机制，以减少线程之间的竞争。
+- **高性能**：与其他线程安全集合相比，`ConcurrentDictionary` 提供了更高的性能，特别是在高并发的场景下。
+- **灵活的操作**：提供了多种方法来添加、更新和删除键值对，支持原子操作。
+
+### 2. 主要方法
+
+以下是一些常用的方法：
+
+- **`AddOrUpdate`**：添加一个新键值对，或者如果键已存在，则更新其值。
+- **`GetOrAdd`**：获取指定键的值，如果键不存在，则添加一个新的键值对。
+- **`TryAdd`**：尝试添加一个新的键值对，如果键已存在，则返回 `false`。
+- **`TryGetValue`**：尝试获取指定键的值，如果成功，则返回 `true`。
+- **`TryRemove`**：尝试删除指定键的键值对。
+
+### 3. 示例
+
+以下是一个简单的使用 `ConcurrentDictionary` 的示例：
+
+```csharp
+using System;
+using System.Collections.Concurrent;
+
+class Program
+{
+    static void Main()
+    {
+        // 创建一个 ConcurrentDictionary
+        var dictionary = new ConcurrentDictionary<string, int>();
+
+        // 添加键值对
+        dictionary.TryAdd("apple", 1);
+        dictionary.TryAdd("banana", 2);
+
+        // 更新键值对
+        dictionary.AddOrUpdate("apple", 1, (key, oldValue) => oldValue + 1);
+
+        // 获取值
+        if (dictionary.TryGetValue("apple", out int appleCount))
+        {
+            Console.WriteLine($"Apple count: {appleCount}");
+        }
+
+        // 删除键值对
+        dictionary.TryRemove("banana", out _);
+    }
+}
+```
+
+### 4. 使用场景
+
+- **高并发环境**：适用于需要多个线程同时访问和修改集合的场景，如缓存、计数器、共享状态等。
+- **数据共享**：在多线程应用程序中，`ConcurrentDictionary` 可以作为共享数据结构，确保数据的一致性和完整性。
+
+### 5. 总结
+
+`ConcurrentDictionary` 是一个强大的集合类，适用于需要线程安全和高性能的场景。通过提供多种原子操作方法，它使得在多线程环境中管理键值对变得更加简单和安全。
+
+
+# `Process.Start("explorer.exe", fileName); 解釋`
+[2025-01-09T17:22:57.368+08:00_W2-4]
+
+```cs
+[SupportedOSPlatform("maccatalyst")]
+		[UnsupportedOSPlatform("ios")]
+		[UnsupportedOSPlatform("tvos")]
+		public static Process Start(string fileName, string arguments);
+```
+
+
+
+# Process.Start(new ProcessStartInfo() { UseShellExecute = true, FileName = fileName });
+[2025-01-09T17:28:21.716+08:00_W2-4]
+
+##
+`Process.Start(new ProcessStartInfo() { UseShellExecute = true, FileName = fileName });` 是一行 C# 代碼，用於啟動一個新的進程，並且使用 Windows 的外殼來執行指定的檔案或命令。以下是這行代碼的詳細解釋：
+
+1. **Process**: 這是 `System.Diagnostics` 命名空間中的一個類，用於啟動和管理進程。
+
+2. **Start**: 這是一個靜態方法，用於啟動新的進程。
+
+3. **ProcessStartInfo**: 這是一個類，用於指定啟動進程的詳細信息，包括要執行的應用程序、命令行參數、工作目錄等。
+
+4. **UseShellExecute**: 這是一個屬性，當設置為 `true` 時，表示使用 Windows 外殼來啟動進程。這意味著可以使用外殼功能，例如打開文件、資料夾或 URL，而不僅僅是執行可執行文件。
+
+5. **FileName**: 這是一個屬性，指定要執行的檔案或命令的名稱或路徑。在這種情況下，`fileName` 是一個變數，應該包含要打開的檔案或資料夾的路徑。
+
+### 示例
+假設 `fileName` 的值是 `"C:\\Users\\UserName\\Documents"`，那麼這行代碼將會使用 Windows 外殼啟動檔案總管並顯示該文件夾的內容。
+
+### 注意事項
+- **UseShellExecute** 設置為 `true` 時，`FileName` 必須是有效的路徑或命令，否則將會引發例外。
+- 當 `UseShellExecute` 設置為 `true` 時，無法使用標準輸入、輸出或錯誤流。
+- 這行代碼需要在適當的上下文中使用，例如在一個方法內部，並且需要引用 `System.Diagnostics` 命名空間。
+
+這種方式通常用於需要利用 Windows 外殼功能的情況，例如打開文件、資料夾或網頁等。
