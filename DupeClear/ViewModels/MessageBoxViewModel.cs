@@ -26,7 +26,7 @@ public partial class MessageBoxViewModel : ViewModelBase {
 		set {
 			if (_title != value) {
 				_title = value;
-				OnPropertyChanged();
+				OnPropertyChanged(); //# see ask
 			}
 		}
 	}

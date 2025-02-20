@@ -40,7 +40,7 @@
 								  Inverted="True" />
 		<conv:OneTrueToTrueConverter x:Key="OneTrueToTrueConverter" />
 
-		<system:Int32 x:Key="IntOne">1</system:Int32>
+		<system:Int32 x:Key="IntOne">1</system:Int32>`?
 	</UserControl.Resources>
 	
 	<UserControl.Styles>
@@ -220,16 +220,16 @@
 
 						<!--Search Location ListBox-->
 						<ListBox x:Name="IncludedDirectoriesListBox"
-
-
-
+`当内容的大小超出可视区域时，ScrollViewer 会提供滚动条以便用户查看隐藏的内容。
+`HorizontalScrollBarVisibility 是 ScrollViewer 控件的一个属性，用于控制水平滚动条的可见性。
+`可选值:Visible: 始终显示水平滚动条。Hidden: 始终隐藏水平滚动条。Auto: 根据内容的大小自动决定是否显示水平滚动条。
 								 ScrollViewer.HorizontalScrollBarVisibility="Auto"
-								 DragDrop.AllowDrop="True" 
+								 DragDrop.AllowDrop="True" `可從他處把文件夾拖至此
 								 SelectionMode="Multiple"
-								 SelectedItem="{Binding SelectedIncludedDirectory, Mode=TwoWay}" 
+								 SelectedItem="{Binding SelectedIncludedDirectory, Mode=TwoWay}" `?
 								 SelectedItems="{Binding SelectedIncludedDirectories}"
 								 ItemsSource="{Binding IncludedDirectories}"
-								 
+								 `匪選ˡ框ˇ雙擊㕥改勾選狀態?
 								 DoubleTapped="IncludedDirectoriesListBox_DoubleTapped">
 							<ListBox.KeyBindings>
 								<KeyBinding Gesture="Space"
@@ -323,6 +323,12 @@
 								</Grid.RowDefinitions>
 
 								<!--Search Location CheckBoxes-->
+`The WrapPanel uses a default arrangement of (multiple) child elements is in sequence from left to right,
+`while they fit in the width. It starts a new line when there is no space left
+`(including any margins and borders).
+`
+`When the orientation property is set to vertical
+`, the arrangement is top to bottom with a new column started when there is no more height remaining.
 								<WrapPanel>
 									<!--Match Same Filename-->
 									<CheckBox x:Name="MatchSameFileNameCheckBox"

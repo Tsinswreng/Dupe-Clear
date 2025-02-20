@@ -1,4 +1,7 @@
 ﻿// Copyright (C) 2024 Antik Mozib. All rights reserved.
+/* #
+緩存ʹ用戶數據模型、含 已選ʹ主題, 歷史目錄 等。
+ */
 
 using DupeClear.Helpers;
 using DupeClear.Models.Serializable;

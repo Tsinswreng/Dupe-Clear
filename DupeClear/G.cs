@@ -1,3 +1,4 @@
+#pragma warning disable CS8981
 global using std = System;
 global using u8 = System.Byte;
 global using i32 = System.Int32;
@@ -11,7 +12,7 @@ global using str = System.String;
 global using unknown = System.Object;
 global using any = System.Dynamic.ExpandoObject;
 global using System.Threading.Tasks;
-
+#pragma warning restore CS8981
 //____
 
 using System;

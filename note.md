@@ -614,3 +614,53 @@ class Program
 - 這行代碼需要在適當的上下文中使用，例如在一個方法內部，並且需要引用 `System.Diagnostics` 命名空間。
 
 這種方式通常用於需要利用 Windows 外殼功能的情況，例如打開文件、資料夾或網頁等。
+
+
+# CommunityToolkit.Mvvm.ComponentModel.ObservableObject.OnPropertyChanged 解釋
+[2025-01-09T17:46:56.100+08:00_W2-4]
+##
+`CommunityToolkit.Mvvm.ComponentModel.ObservableObject.OnPropertyChanged` 是一個用於實現屬性變更通知的功能，通常在使用 MVVM（Model-View-ViewModel）設計模式的應用程序中使用。這個功能是由 Community Toolkit MVVM 提供的，旨在簡化 WPF、UWP 和其他 XAML 基於的應用程序中的數據綁定。
+
+### 主要概念
+
+1. **ObservableObject**: 
+   - `ObservableObject` 是 Community Toolkit MVVM 中的一個基類，提供了屬性變更通知的實現。當屬性值發生變化時，這個類會通知綁定到該屬性的 UI 元素進行更新。
+
+2. **OnPropertyChanged**:
+   - `OnPropertyChanged` 是 `ObservableObject` 類中的一個方法，用於觸發屬性變更通知。當你在 ViewModel 中更改某個屬性時，應該調用這個方法來通知 UI 更新。
+
+### 使用示例
+
+以下是一個簡單的示例，展示如何使用 `ObservableObject` 和 `OnPropertyChanged` 方法：
+
+```csharp
+using CommunityToolkit.Mvvm.ComponentModel;
+
+public class MyViewModel : ObservableObject
+{
+    private string _name;
+
+    public string Name
+    {
+        get => _name;
+        set
+        {
+            if (SetProperty(ref _name, value)) // SetProperty 方法會自動調用 OnPropertyChanged
+            {
+                // 這裡可以執行其他操作，例如記錄變更
+            }
+        }
+    }
+}
+```
+
+### 解釋
+
+- **屬性**: 在上面的示例中，`Name` 是一個屬性，當它的值被設置時，會檢查新值是否與舊值不同。
+- **SetProperty**: `SetProperty` 是 `ObservableObject` 提供的一個方法，用於設置屬性值並自動調用 `OnPropertyChanged`。這樣可以確保當屬性值變更時，UI 會自動更新。
+- **OnPropertyChanged**: 在 `SetProperty` 方法內部，當屬性值成功更改時，會調用 `OnPropertyChanged` 方法，這樣綁定到該屬性的 UI 元素就會收到通知並更新顯示。
+
+### 總結
+
+`CommunityToolkit.Mvvm.ComponentModel.ObservableObject.OnPropertyChanged` 是一個關鍵的功能，用於實現屬性變更通知，從而支持 MVVM 模式中的數據綁定。通過使用 `ObservableObject` 和 `OnPropertyChanged`，開發者可以輕鬆地管理屬性變更並確保 UI 的即時更新。這使得開發過程更加高效和簡潔。
+

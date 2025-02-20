@@ -23,17 +23,19 @@ public partial class MainView : UserControl {
 	private MainViewModel? _viewModel;
 	private bool _viewModelClosed;
 
+
 	public MainView() {
-		InitializeComponent();
+		_render();
+		//InitializeComponent();
+		
+		// IncludedDirectoriesListBox.AddHandler(DragDrop.DragOverEvent, IncludedDirectoriesListBox_DragOver);
+		// IncludedDirectoriesListBox.AddHandler(DragDrop.DropEvent, IncludedDirectoriesListBox_Drop);
 
-		IncludedDirectoriesListBox.AddHandler(DragDrop.DragOverEvent, IncludedDirectoriesListBox_DragOver);
-		IncludedDirectoriesListBox.AddHandler(DragDrop.DropEvent, IncludedDirectoriesListBox_Drop);
+		// ExcludedDirectoriesListBox.AddHandler(DragDrop.DragOverEvent, ExcludedDirectoriesListBox_DragOver);
+		// ExcludedDirectoriesListBox.AddHandler(DragDrop.DropEvent, ExcludedDirectoriesListBox_Drop);
 
-		ExcludedDirectoriesListBox.AddHandler(DragDrop.DragOverEvent, ExcludedDirectoriesListBox_DragOver);
-		ExcludedDirectoriesListBox.AddHandler(DragDrop.DropEvent, ExcludedDirectoriesListBox_Drop);
-
-		AppIconImage.AddHandler(PointerReleasedEvent, AppIconImage_PreviewPointerReleased, RoutingStrategies.Tunnel);
-		AppTitleTextBlock.AddHandler(PointerReleasedEvent, AppTitleTextBlock_PreviewPointerReleased, RoutingStrategies.Tunnel);
+		// AppIconImage.AddHandler(PointerReleasedEvent, AppIconImage_PreviewPointerReleased, RoutingStrategies.Tunnel);
+		// AppTitleTextBlock.AddHandler(PointerReleasedEvent, AppTitleTextBlock_PreviewPointerReleased, RoutingStrategies.Tunnel);
 	}
 
 	public MainView(IWindowService windowService) : this() {
