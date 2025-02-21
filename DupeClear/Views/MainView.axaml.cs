@@ -25,8 +25,9 @@ public partial class MainView : UserControl {
 
 
 	public MainView() {
+		DataContext = new MainViewModel();
 		_render();
-		//InitializeComponent();
+		// InitializeComponent();
 		
 		// IncludedDirectoriesListBox.AddHandler(DragDrop.DragOverEvent, IncludedDirectoriesListBox_DragOver);
 		// IncludedDirectoriesListBox.AddHandler(DragDrop.DropEvent, IncludedDirectoriesListBox_Drop);

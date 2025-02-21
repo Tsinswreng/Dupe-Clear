@@ -1828,6 +1828,7 @@ public partial class MainViewModel : ViewModelBase {
 
 	[RelayCommand]
 	private async Task CloseAsync(object? arg) {
+		//System.Console.WriteLine(123);//+
 		if (IsBusy && OperationCanBeCanceled) {
 			if (MessageBox != null && IsSearching) {
 				var msgBoxResult = await MessageBox.Invoke(new MessageBoxViewModel() {
@@ -1870,12 +1871,14 @@ public partial class MainViewModel : ViewModelBase {
 	private void ShowAbout(object? arg) {
 		var assm = Assembly.GetEntryAssembly();
 		if (assm == null) {
+			System.Console.WriteLine("Assembly.GetEntryAssembly()==null");
 			return;
 		}
 		var name = assm.GetCustomAttribute<AssemblyProductAttribute>()?.Product;
 		var version = assm.GetName().Version;
 		var copyright = assm.GetCustomAttribute<AssemblyCopyrightAttribute>()?.Copyright;
-		MessageBox?.Invoke(new MessageBoxViewModel() { //MessageBoxViewModelˋ自定義也
+		//System.Console.WriteLine(MessageBox==null); true
+		MessageBox?.Invoke(new MessageBoxViewModel() {
 			Title = "About",
 			Header = $"{name} v{version}",
 			Message = $"{copyright}",

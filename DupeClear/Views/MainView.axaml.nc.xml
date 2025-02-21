@@ -139,6 +139,8 @@
 								<TextBlock Classes="icon"
 										   IsVisible="{Binding Theme, Converter={StaticResource IntToTrueConverter}, ConverterParameter={x:Static models:Theme.Auto}}"
 										   Text="{StaticResource CircleCheck}" />
+`在 Resources/FontAwesome.axaml
+`App.axaml中有<!-- <ResourceInclude Source="/Resources/FontAwesome.axaml" /> -->
 							</MenuItem.Icon>
 						</MenuItem>
 
