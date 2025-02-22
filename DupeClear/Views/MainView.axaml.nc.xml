@@ -198,7 +198,7 @@
 							  Command="{Binding ShowAboutCommand}" />
 				</MenuItem>
 			</Menu>
-		</Grid>
+		</Grid>`~WindowsTitleBar
 
 		<TabControl x:Name="MainTabControl"
 					Grid.Row="1"

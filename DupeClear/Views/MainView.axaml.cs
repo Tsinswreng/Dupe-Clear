@@ -26,6 +26,7 @@ public partial class MainView : UserControl {
 
 	public MainView() {
 		DataContext = new MainViewModel();
+		_style();
 		_render();
 		// InitializeComponent();
 		
