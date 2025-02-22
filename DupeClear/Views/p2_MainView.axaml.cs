@@ -19,6 +19,7 @@ using DupeClear.Native;
 using DupeClear.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -247,33 +248,7 @@ public partial class MainView{
 							]);
 						}//~conf grid3:Grid
 						{{//grid3:Grid
-							var wrapPanel = new WrapPanel();
-							grid3.Children.Add(wrapPanel);
-							{
-								
-							}
-							{{//wrapPanel:WrapPanel
-								var MatchSameFileNameCheckBox = new CheckBox();
-								wrapPanel.Children.Add(MatchSameFileNameCheckBox);
-								{//conf MatchSameFileNameCheckBox:CheckBox
-									var o = MatchSameFileNameCheckBox;
-									o.Name = nameof(MatchSameFileNameCheckBox);
-									o.Content = "Match Same Fi_lename";
-									o.Margin = new Thickness(0, 0, 12, 0);
-									o.Bind(
-										CheckBox.IsEnabledProperty
-										,new Binding(nameof(ctx.IsBusy)){
-											Converter = BoolToInvertedBoolConverter.inst
-										}
-									);
-									o.Bind(
-										CheckBox.IsCheckedProperty
-										,new Binding(nameof(ctx.MatchSameFileName)){
-											Mode = BindingMode.TwoWay
-										}
-									);
-								}//~conf MatchSameFileNameCheckBox:CheckBox
-							}}//~wrapPanel:WrapPanel
+							grid3.Children.Add(_chkBoxs_matchConf());
 						}}//~grid3:Grid
 					}}//~border:Border
 				}}//~grid2:Grid
@@ -486,7 +461,7 @@ public partial class MainView{
 
 	protected Control _IncludedDirectoriesListBoxItemTemplate(SearchDirectory history){
 		var ans = new Grid(){};
-		var idx_ans = 1;
+		//var idx_ans = 1;
 		ans.ColumnDefinitions.AddRange([
 			new ColumnDefinition{Width = new GridLength(4)}
 			,new ColumnDefinition{Width = GridLength.Auto}
@@ -498,13 +473,14 @@ public partial class MainView{
 			,new ColumnDefinition{Width = new GridLength(4)}
 		]);
 		{{//ans:Grid
-			var IncludedDirectoryCheckBox = new CheckBox(){
+			var CheckBox_IncludedDirectory = new CheckBox(){
 				Focusable = false
 			};
-			ans.Children.Add(IncludedDirectoryCheckBox);
+			ans.Children.Add(CheckBox_IncludedDirectory);
 			{//conf IncludedDirectoryCheckBox
-				var o = IncludedDirectoryCheckBox;
-				o.Name = nameof(IncludedDirectoryCheckBox);
+				var o = CheckBox_IncludedDirectory;
+				Grid.SetColumn(o, 1);
+				o.Name = nameof(CheckBox_IncludedDirectory);
 				o.Bind(
 					CheckBox.IsEnabledProperty
 					,new Binding(nameof(DataContext)+"."+nameof(ctx.IsBusy)){
@@ -525,12 +501,13 @@ public partial class MainView{
 					,new Binding("")
 				);
 				o.Click += IncludedDirectoryCheckBox_Click;
-				Grid.SetColumn(IncludedDirectoryCheckBox, idx_ans++);
 			}//~conf IncludedDirectoryCheckBox
+			
 			var image = new Image(){};
 			ans.Children.Add(image);
 			{//conf image
 				var o = image;
+				Grid.SetColumn(o, 2);
 				o.Classes.Add("listbox-file-icon");
 				o.Bind(
 					Image.IsVisibleProperty
@@ -547,7 +524,7 @@ public partial class MainView{
 			ans.Children.Add(folder);
 			{//conf folder
 				var o = folder;
-				Grid.SetColumn(o, idx_ans++);
+				Grid.SetColumn(o, 2);
 				o.Classes.Add("listbox-file-icon");
 				o.Bind(
 					TextBlock.IsVisibleProperty
@@ -561,7 +538,7 @@ public partial class MainView{
 			ans.Children.Add(fullName);
 			{//conf fullName
 				var o = fullName;
-				Grid.SetColumn(o, idx_ans++);
+				Grid.SetColumn(o, 3);
 				o.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center;
 				o.Bind(
 					TextBlock.TextProperty
@@ -572,7 +549,7 @@ public partial class MainView{
 			ans.Children.Add(TriangleExclamation);
 			{//conf TriangleExclamation
 				var o = TriangleExclamation;
-				Grid.SetColumn(o, idx_ans++);
+				Grid.SetColumn(o, 4);
 				o.Classes.Add("icon");
 				o.Margin = new Thickness(2,0);
 				ToolTip.SetTip(o, "Folder excluded from search");
@@ -582,12 +559,14 @@ public partial class MainView{
 				);
 				o.Text = Application.Current?.FindResource("TriangleExclamation") as str;
 			}//~conf TriangleExclamation
+			
 			var stackPanel = new StackPanel(){};
 			ans.Children.Add(stackPanel);
 			{
 				var o = stackPanel;
 				o.Orientation = Avalonia.Layout.Orientation.Horizontal;
-				Grid.SetColumn(o, idx_ans++);
+				//System.Console.WriteLine(idx_ans);//7
+				Grid.SetColumn(o, 6);
 			}
 			{{//stackPanel:StackPanel
 				stackPanel.Children.Add(_UpDownButton(nameof(ctx.MoveDirectoryUpCommand), "ArrowUp"));
@@ -596,5 +575,136 @@ public partial class MainView{
 		}}//~ans:Grid
 		return ans;
 		//
+	}
+
+	protected Control _chkBoxs_matchConf(){
+		//
+		var wrapPanel = new WrapPanel();
+		{
+			
+		}
+		{{//wrapPanel:WrapPanel
+			var MatchSameFileNameCheckBox = new CheckBox();
+			wrapPanel.Children.Add(MatchSameFileNameCheckBox);
+			{//conf MatchSameFileNameCheckBox:CheckBox
+				var o = MatchSameFileNameCheckBox;
+				o.Name = nameof(MatchSameFileNameCheckBox);
+				o.Content = "Match Same Fi_lename";
+				o.Margin = new Thickness(0, 0, 12, 0);
+				o.Bind(
+					CheckBox.IsEnabledProperty
+					,new Binding(nameof(ctx.IsBusy)){
+						Converter = BoolToInvertedBoolConverter.inst
+					}
+				);
+				o.Bind(
+					CheckBox.IsCheckedProperty
+					,new Binding(nameof(ctx.MatchSameFileName)){
+						Mode = BindingMode.TwoWay
+					}
+				);
+			}//~conf MatchSameFileNameCheckBox:CheckBox
+
+			var stackPanel = new StackPanel();
+			wrapPanel.Children.Add(stackPanel);
+			{//conf stackPanel:StackPanel
+				var o = stackPanel;
+				o.Orientation = Avalonia.Layout.Orientation.Horizontal;
+				o.Margin = new Thickness(0, 0, 12, 0);
+				o.Spacing = 4.0;
+			}//~conf stackPanel:StackPanel
+			{{//stackPanel:StackPanel
+				var chkBox_matchSameContent = new CheckBox{};
+				stackPanel.Children.Add(chkBox_matchSameContent);
+				{//conf chkBox_matchSameContent:CheckBox
+					var o = chkBox_matchSameContent;
+					//var tip = Resources["MatchSameContentsToolTip"];
+					var tip = DupeClear.Resources.Resources.MatchSameContentsToolTip;
+					ToolTip.SetTip(o, tip);
+					o.Bind(
+						CheckBox.IsCheckedProperty
+						,new Binding(nameof(ctx.MatchSameContents)){Mode=BindingMode.TwoWay}
+					);
+					o.Content = "Match Same _Content";
+					// o.Bind(
+					// 	CheckBox.IsEnabledProperty
+					// 	,new MultiBinding{
+					// 		Converter = AllTrueToTrueConverter.inst
+					// 		,Bindings = [
+					// 			new Binding(nameof(ctx.IsBusy))
+					// 			,new Binding(nameof(ctx.IsSearching)){
+					// 				//ElementName
+					// 				//Source = this.FindControl<CheckBox>(nameof(MatchSameSizeCheckBox))
+					// 				//Source = //TODO
+					// 			}
+					// 		]
+					// 	}
+					// );
+				}//~conf chkBox_matchSameContent:CheckBox
+				
+				var icon = new TextBlock{};
+				stackPanel.Children.Add(icon);
+				{//conf icon:TextBlock
+					icon.Classes.Add("icon");//TODO nameof
+					icon.Text = this.FindResource("CircleInfo") as str;
+					ToolTip.SetTip(icon, DupeClear.Resources.Resources.MatchSameContentsToolTip);
+				}//~conf icon:TextBlock
+			}}//~stackPanel:StackPanel
+
+			var chkBox_matchSameType = new CheckBox{};
+			wrapPanel.Children.Add(chkBox_matchSameType);
+			{//conf chkBox_matchSameType:CheckBox
+				var o = chkBox_matchSameType;
+				o.Content = "Match Same _Type";
+				o.Margin = new Thickness(0, 0, 12, 0);
+				o.Bind(
+					CheckBox.IsEnabledProperty
+					,new Binding(nameof(ctx.IsBusy)){
+						Converter = BoolToInvertedBoolConverter.inst
+					}
+				);
+				o.Bind(
+					CheckBox.IsCheckedProperty
+					,new Binding(nameof(ctx.MatchSameType)){Mode=BindingMode.TwoWay}
+				);
+			}//~conf chkBox_matchSameType:CheckBox
+
+			var MatchSameSizeCheckBox = new CheckBox{};
+			wrapPanel.Children.Add(MatchSameSizeCheckBox);
+			{//conf MatchSameSizeCheckBox:CheckBox
+				var o = MatchSameSizeCheckBox;
+				o.Name = nameof(MatchSameSizeCheckBox);
+				o.Content = "Match Same Si_ze";
+				o.Margin = new Thickness(0, 0, 12, 0);
+				o.Bind(
+					CheckBox.IsEnabledProperty
+					,new Binding(nameof(ctx.IsBusy)){
+						Converter = BoolToInvertedBoolConverter.inst
+					}
+				);
+				o.Bind(
+					CheckBox.IsCheckedProperty
+					,new Binding(nameof(ctx.MatchSameSize)){Mode=BindingMode.TwoWay}
+				);
+			}//~conf MatchSameSizeCheckBox:CheckBox
+
+			var chkBox_matchAcrossFolders = new CheckBox{};
+			wrapPanel.Children.Add(chkBox_matchAcrossFolders);
+			{//conf chkBox_matchAcrossFolders:CheckBox
+				var o = chkBox_matchAcrossFolders;
+				o.Content = "Match Across F_olders";
+				o.Bind(
+					CheckBox.IsEnabledProperty
+					,new Binding(nameof(ctx.IsBusy)){
+						Converter = BoolToInvertedBoolConverter.inst
+					}
+				);
+				o.Bind(
+					CheckBox.IsCheckedProperty
+					,new Binding(nameof(ctx.MatchAcrossDirectories)){Mode=BindingMode.TwoWay}
+				);
+			}//~conf chkBox_matchAcrossFolders:CheckBox
+		}}//~wrapPanel:WrapPanel
+		return wrapPanel;
 	}
 }

@@ -9,6 +9,10 @@ using System.Linq;
 namespace DupeClear.Converters;
 
 public class AllTrueToTrueConverter : IMultiValueConverter {
+
+	protected static AllTrueToTrueConverter? _inst = null;
+	public static AllTrueToTrueConverter inst => _inst??= new AllTrueToTrueConverter();
+
 	public object? Convert(IList<object?> values, Type targetType, object? parameter, CultureInfo culture) {
 		return values.All(x => {
 			if (x is bool boolVal) {
