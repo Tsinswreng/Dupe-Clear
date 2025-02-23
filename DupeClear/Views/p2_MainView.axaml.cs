@@ -1,3 +1,15 @@
+/* 
+蠹:
+= 頂工具欄 Help>About 無彈窗
+= 頂工具欄 打勾圖標ˇʹ顯ˋ謬
+= Locations 諸項 文件夾圖標過大
+= 圈i ˉ圖標ˋ未顯
+= Label之Target未設
+= Filename Pattern之Target未顯
+= Filename Pattern 與 Extensions 後之框 未對齊
+
+ */
+
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
@@ -23,6 +35,17 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+
+#region alias
+using Resx = DupeClear.Resources.Resources;
+using Bd = Avalonia.Data.Binding;
+using BdM = Avalonia.Data.BindingMode;
+using GL = Avalonia.Controls.GridLength;
+using ColDef = Avalonia.Controls.ColumnDefinition;
+using RowDef = Avalonia.Controls.RowDefinition;
+#endregion
+
+
 
 namespace DupeClear.Views;
 public partial class MainView{
@@ -126,9 +149,9 @@ public partial class MainView{
 		Content = MainGrid;
 		MainGrid.Name = nameof(MainGrid);
 		MainGrid.RowDefinitions.AddRange([
-			new RowDefinition{Height = GridLength.Auto}
-			,new RowDefinition{Height = GridLength.Star}
-			,new RowDefinition{Height = GridLength.Auto}
+			new RowDef{Height = GL.Auto}
+			,new RowDef{Height = GL.Star}
+			,new RowDef{Height = GL.Auto}
 		]);
 		{{//MainGrid:Grid
 			MainGrid.Children.Add(_WindowsTitleBar());
@@ -154,18 +177,18 @@ public partial class MainView{
 			var grid = new Grid(){};
 			Locations.Content = grid;
 			grid.ColumnDefinitions.AddRange([
-				new ColumnDefinition{Width = GridLength.Star}
-				,new ColumnDefinition{Width = new GridLength(8)}
-				,new ColumnDefinition{Width = GridLength.Auto}
+				new ColDef{Width = GL.Star}
+				,new ColDef{Width = new GL(8)}
+				,new ColDef{Width = GL.Auto}
 			]);
 			{{//grid:Grid
 				var grid2 = new Grid(){};
 				grid.Children.Add(grid2);
 				var idx_grid2 = 1;
 				grid2.RowDefinitions.AddRange([
-					new RowDefinition{Height = GridLength.Star}
-					,new RowDefinition{Height = new GridLength(16)}
-					,new RowDefinition{Height = GridLength.Auto}
+					new RowDef{Height = GL.Star}
+					,new RowDef{Height = new GL(16)}
+					,new RowDef{Height = GL.Auto}
 				]);
 				{{//grid2:Grid
 					//
@@ -184,15 +207,15 @@ public partial class MainView{
 						DragDrop.SetAllowDrop(o, true);//可從他處把文件夾拖至此
 						o.Bind(
 							ListBox.SelectedItemProperty
-							,new Binding(nameof(ctx.SelectedIncludedDirectory)){Mode = BindingMode.TwoWay}
+							,new Bd(nameof(ctx.SelectedIncludedDirectory)){Mode = BdM.TwoWay}
 						);
 						o.Bind(
 							ListBox.SelectedItemsProperty
-							,new Binding(nameof(ctx.SelectedIncludedDirectories))
+							,new Bd(nameof(ctx.SelectedIncludedDirectories))
 						);
 						o.Bind(
 							ListBox.ItemsSourceProperty
-							,new Binding(nameof(ctx.IncludedDirectories))
+							,new Bd(nameof(ctx.IncludedDirectories))
 						);
 						o.DoubleTapped += IncludedDirectoriesListBox_DoubleTapped;
 						{//o.KeyBindings
@@ -201,7 +224,7 @@ public partial class MainView{
 							o.KeyBindings.Add(key_space);
 							key_space.Bind(
 								KeyBinding.CommandProperty
-								,new Binding(nameof(ctx.InvertMakingOfSelectedIncludedDirectoryCommand)){
+								,new Bd(nameof(ctx.InvertMakingOfSelectedIncludedDirectoryCommand)){
 									Source=ctx
 								}
 							);
@@ -210,7 +233,7 @@ public partial class MainView{
 							o.KeyBindings.Add(key_delete);
 							key_delete.Bind(
 								KeyBinding.CommandProperty
-								,new Binding(nameof(ctx.RemoveIncludedDirectoryCommand)){
+								,new Bd(nameof(ctx.RemoveIncludedDirectoryCommand)){
 									Source=ctx
 								}
 							);
@@ -242,13 +265,18 @@ public partial class MainView{
 						{//conf grid3:Grid
 							var o = grid3;
 							o.RowDefinitions.AddRange([
-								new RowDefinition(){Height = GridLength.Auto}
-								,new RowDefinition(){Height = new GridLength(8)}
-								,new RowDefinition(){Height = GridLength.Auto}
+								new RowDef(){Height = GL.Auto}
+								,new RowDef(){Height = new GL(8)}
+								,new RowDef(){Height = GL.Auto}
 							]);
 						}//~conf grid3:Grid
 						{{//grid3:Grid
 							grid3.Children.Add(_chkBoxs_matchConf());
+							
+							var additionalOptions = _additionalOptions();
+							grid3.Children.Add(additionalOptions);
+							Grid.SetRow(additionalOptions, 2);
+
 						}}//~grid3:Grid
 					}}//~border:Border
 				}}//~grid2:Grid
@@ -268,19 +296,19 @@ public partial class MainView{
 			var o = ans;
 			o.Bind(
 				Button.IsVisibleProperty
-				,new Binding(nameof(ListBoxItem.IsPointerOver)){//查找祖先类型为ListBoxItem的IsPointerOver属性。这意味着当鼠标悬停在ListBoxItem上时，按钮才会显示。
+				,new Bd(nameof(ListBoxItem.IsPointerOver)){//查找祖先类型为ListBoxItem的IsPointerOver属性。这意味着当鼠标悬停在ListBoxItem上时，按钮才会显示。
 					RelativeSource = new RelativeSource{AncestorType= typeof(ListBoxItem)}
 				}
 			);
 			o.Bind(
 				Button.CommandProperty
-				,new Binding(nameof(DataContext)+"."+bindCmd){//查找祖先元素如UserControl的DataContext
+				,new Bd(nameof(DataContext)+"."+bindCmd){//查找祖先元素如UserControl的DataContext
 					RelativeSource = new RelativeSource{AncestorType= typeof(UserControl)}
 				}
 			);
 			o.Bind(
 				Button.CommandParameterProperty
-				,new Binding("")
+				,new Bd("")
 			);
 			var text = new TextBlock(){};
 			o.Content = text;
@@ -301,11 +329,11 @@ public partial class MainView{
 		var WindowsTitleBar = new Grid();//TODO 宜試用WrapPanel
 		WindowsTitleBar.Name = nameof(WindowsTitleBar);
 		WindowsTitleBar.ColumnDefinitions.AddRange([
-			new ColumnDefinition{Width = GridLength.Auto}
-			,new ColumnDefinition{Width = new GridLength(4)}
-			,new ColumnDefinition{Width = GridLength.Auto}
-			,new ColumnDefinition{Width = new GridLength(16)}
-			,new ColumnDefinition{Width = GridLength.Auto}
+			new ColDef{Width = GL.Auto}
+			,new ColDef{Width = new GL(4)}
+			,new ColDef{Width = GL.Auto}
+			,new ColDef{Width = new GL(16)}
+			,new ColDef{Width = GL.Auto}
 		]);
 		{{//WindowsTitleBar:Grid
 			var AppIconImage = new Image(){
@@ -369,7 +397,7 @@ public partial class MainView{
 				{//Exit:MenuItem
 					Exit.Bind(
 						MenuItem.CommandProperty
-						,new Binding(nameof(ctx.CloseCommand))
+						,new Bd(nameof(ctx.CloseCommand))
 					);
 					var icon = new TextBlock(){};
 					Exit.Icon = icon;
@@ -395,7 +423,7 @@ public partial class MainView{
 					//
 					CheckForUpdates.Bind(
 						MenuItem.CommandProperty
-						,new Binding(nameof(ctx.CheckForUpdatesCommand))
+						,new Bd(nameof(ctx.CheckForUpdatesCommand))
 					);
 					var icon = new TextBlock(){};
 					CheckForUpdates.Icon = icon;
@@ -412,7 +440,7 @@ public partial class MainView{
 				{{//About:MenuItem
 					About.Bind(
 						MenuItem.CommandProperty
-						,new Binding(nameof(ctx.ShowAboutCommand)) //TODO 不效、宜察原ʹ叶
+						,new Bd(nameof(ctx.ShowAboutCommand)) //TODO 不效、宜察原ʹ叶
 					);
 				}}//~About:MenuItem
 			}}//~HelpMenuItem:MenuItem
@@ -433,7 +461,7 @@ public partial class MainView{
 			//
 			ans.Bind(
 				MenuItem.CommandParameterProperty
-				,new Binding(nameof(ctx.ChangeThemeCommand))
+				,new Bd(nameof(ctx.ChangeThemeCommand))
 			);
 			//
 			var icon = new TextBlock(){};
@@ -448,7 +476,7 @@ public partial class MainView{
 				icon.Classes.Add("icon");//TODO nameof
 				icon.Bind(
 					TextBlock.IsVisibleProperty
-					,new Binding(nameof(ctx.Theme)){
+					,new Bd(nameof(ctx.Theme)){
 						Converter = new IntToTrueConverter()
 						,ConverterParameter = commandParameter
 					}
@@ -463,14 +491,14 @@ public partial class MainView{
 		var ans = new Grid(){};
 		//var idx_ans = 1;
 		ans.ColumnDefinitions.AddRange([
-			new ColumnDefinition{Width = new GridLength(4)}
-			,new ColumnDefinition{Width = GridLength.Auto}
-			,new ColumnDefinition{Width = GridLength.Auto}
-			,new ColumnDefinition{Width = GridLength.Auto}
-			,new ColumnDefinition{Width = GridLength.Auto}
-			,new ColumnDefinition{Width = GridLength.Star}
-			,new ColumnDefinition{Width = GridLength.Auto}
-			,new ColumnDefinition{Width = new GridLength(4)}
+			new ColDef{Width = new GL(4)}
+			,new ColDef{Width = GL.Auto}
+			,new ColDef{Width = GL.Auto}
+			,new ColDef{Width = GL.Auto}
+			,new ColDef{Width = GL.Auto}
+			,new ColDef{Width = GL.Star}
+			,new ColDef{Width = GL.Auto}
+			,new ColDef{Width = new GL(4)}
 		]);
 		{{//ans:Grid
 			var CheckBox_IncludedDirectory = new CheckBox(){
@@ -483,22 +511,22 @@ public partial class MainView{
 				o.Name = nameof(CheckBox_IncludedDirectory);
 				o.Bind(
 					CheckBox.IsEnabledProperty
-					,new Binding(nameof(DataContext)+"."+nameof(ctx.IsBusy)){
+					,new Bd(nameof(DataContext)+"."+nameof(ctx.IsBusy)){
 						RelativeSource = new RelativeSource{AncestorType= typeof(UserControl)}//TODO ?
 						,Converter = BoolToInvertedBoolConverter.inst
 					}
 				);
 				o.Bind(
 					CheckBox.IsCheckedProperty
-					,new Binding(nameof(history.IsMarked)){Mode=BindingMode.TwoWay}
+					,new Bd(nameof(history.IsMarked)){Mode=BdM.TwoWay}
 				);
 				o.Bind(
 					CheckBox.CommandProperty
-					,new Binding(nameof(DataContext)+"."+nameof(ctx.ApplyMarkingToSelectedIncludedDirectoriesCommand))
+					,new Bd(nameof(DataContext)+"."+nameof(ctx.ApplyMarkingToSelectedIncludedDirectoriesCommand))
 				);
 				o.Bind(
 					CheckBox.CommandParameterProperty
-					,new Binding("")
+					,new Bd("")
 				);
 				o.Click += IncludedDirectoryCheckBox_Click;
 			}//~conf IncludedDirectoryCheckBox
@@ -511,13 +539,13 @@ public partial class MainView{
 				o.Classes.Add("listbox-file-icon");
 				o.Bind(
 					Image.IsVisibleProperty
-					,new Binding(nameof(history.FolderIcon)){
+					,new Bd(nameof(history.FolderIcon)){
 						Converter = new NullToTrueConverter{Inverted=true}
 					}
 				);
 				o.Bind(
 					Image.SourceProperty
-					,new Binding(nameof(history.FolderIcon))
+					,new Bd(nameof(history.FolderIcon))
 				);
 			}//~conf image
 			var folder = new TextBlock(){};
@@ -528,7 +556,7 @@ public partial class MainView{
 				o.Classes.Add("listbox-file-icon");
 				o.Bind(
 					TextBlock.IsVisibleProperty
-					,new Binding(nameof(history.FolderIcon)){
+					,new Bd(nameof(history.FolderIcon)){
 						Converter = new NullToTrueConverter()
 					}
 				);
@@ -542,7 +570,7 @@ public partial class MainView{
 				o.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center;
 				o.Bind(
 					TextBlock.TextProperty
-					,new Binding(nameof(history.FullName))
+					,new Bd(nameof(history.FullName))
 				);
 			}//~conf fullName
 			var TriangleExclamation = new TextBlock(){};
@@ -555,7 +583,7 @@ public partial class MainView{
 				ToolTip.SetTip(o, "Folder excluded from search");
 				o.Bind(
 					TextBlock.IsVisibleProperty
-					,new Binding(nameof(history.IsExcluded))
+					,new Bd(nameof(history.IsExcluded))
 				);
 				o.Text = Application.Current?.FindResource("TriangleExclamation") as str;
 			}//~conf TriangleExclamation
@@ -593,14 +621,14 @@ public partial class MainView{
 				o.Margin = new Thickness(0, 0, 12, 0);
 				o.Bind(
 					CheckBox.IsEnabledProperty
-					,new Binding(nameof(ctx.IsBusy)){
+					,new Bd(nameof(ctx.IsBusy)){
 						Converter = BoolToInvertedBoolConverter.inst
 					}
 				);
 				o.Bind(
 					CheckBox.IsCheckedProperty
-					,new Binding(nameof(ctx.MatchSameFileName)){
-						Mode = BindingMode.TwoWay
+					,new Bd(nameof(ctx.MatchSameFileName)){
+						Mode = BdM.TwoWay
 					}
 				);
 			}//~conf MatchSameFileNameCheckBox:CheckBox
@@ -619,11 +647,11 @@ public partial class MainView{
 				{//conf chkBox_matchSameContent:CheckBox
 					var o = chkBox_matchSameContent;
 					//var tip = Resources["MatchSameContentsToolTip"];
-					var tip = DupeClear.Resources.Resources.MatchSameContentsToolTip;
+					var tip = Resx.MatchSameContentsToolTip;
 					ToolTip.SetTip(o, tip);
 					o.Bind(
 						CheckBox.IsCheckedProperty
-						,new Binding(nameof(ctx.MatchSameContents)){Mode=BindingMode.TwoWay}
+						,new Bd(nameof(ctx.MatchSameContents)){Mode=BdM.TwoWay}
 					);
 					o.Content = "Match Same _Content";
 					// o.Bind(
@@ -631,8 +659,8 @@ public partial class MainView{
 					// 	,new MultiBinding{
 					// 		Converter = AllTrueToTrueConverter.inst
 					// 		,Bindings = [
-					// 			new Binding(nameof(ctx.IsBusy))
-					// 			,new Binding(nameof(ctx.IsSearching)){
+					// 			new Bd(nameof(ctx.IsBusy))
+					// 			,new Bd(nameof(ctx.IsSearching)){
 					// 				//ElementName
 					// 				//Source = this.FindControl<CheckBox>(nameof(MatchSameSizeCheckBox))
 					// 				//Source = //TODO
@@ -659,13 +687,13 @@ public partial class MainView{
 				o.Margin = new Thickness(0, 0, 12, 0);
 				o.Bind(
 					CheckBox.IsEnabledProperty
-					,new Binding(nameof(ctx.IsBusy)){
+					,new Bd(nameof(ctx.IsBusy)){
 						Converter = BoolToInvertedBoolConverter.inst
 					}
 				);
 				o.Bind(
 					CheckBox.IsCheckedProperty
-					,new Binding(nameof(ctx.MatchSameType)){Mode=BindingMode.TwoWay}
+					,new Bd(nameof(ctx.MatchSameType)){Mode=BdM.TwoWay}
 				);
 			}//~conf chkBox_matchSameType:CheckBox
 
@@ -678,13 +706,13 @@ public partial class MainView{
 				o.Margin = new Thickness(0, 0, 12, 0);
 				o.Bind(
 					CheckBox.IsEnabledProperty
-					,new Binding(nameof(ctx.IsBusy)){
+					,new Bd(nameof(ctx.IsBusy)){
 						Converter = BoolToInvertedBoolConverter.inst
 					}
 				);
 				o.Bind(
 					CheckBox.IsCheckedProperty
-					,new Binding(nameof(ctx.MatchSameSize)){Mode=BindingMode.TwoWay}
+					,new Bd(nameof(ctx.MatchSameSize)){Mode=BdM.TwoWay}
 				);
 			}//~conf MatchSameSizeCheckBox:CheckBox
 
@@ -695,16 +723,347 @@ public partial class MainView{
 				o.Content = "Match Across F_olders";
 				o.Bind(
 					CheckBox.IsEnabledProperty
-					,new Binding(nameof(ctx.IsBusy)){
+					,new Bd(nameof(ctx.IsBusy)){
 						Converter = BoolToInvertedBoolConverter.inst
 					}
 				);
 				o.Bind(
 					CheckBox.IsCheckedProperty
-					,new Binding(nameof(ctx.MatchAcrossDirectories)){Mode=BindingMode.TwoWay}
+					,new Bd(nameof(ctx.MatchAcrossDirectories)){Mode=BdM.TwoWay}
 				);
 			}//~conf chkBox_matchAcrossFolders:CheckBox
 		}}//~wrapPanel:WrapPanel
 		return wrapPanel;
+	}
+
+	protected Control _additionalOptions(){
+		var ans = new Expander();
+		{//conf ans
+			var o = ans;
+			o.Header = "Additional Options";
+			o.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch;//TODO ?
+			o.BorderThickness = new Thickness(1);
+			o.Bind(
+				Border.BackgroundProperty
+				,new DynamicResourceExtension("DupeClearBorderBrush")
+			);
+			o.Bind(
+				Expander.IsExpandedProperty
+				,new Bd(nameof(ctx.AdditionalOptionsExpanded)){Mode=BdM.TwoWay}
+			);
+		}//~conf ans
+		{{//ans:Expander
+			var stackPanel = new StackPanel{
+				Spacing = 8.0
+			};
+			ans.Content = stackPanel;
+			{{//stackPanel:StackPanel
+
+				var grid_FileNamePattern = new Grid();
+				stackPanel.Children.Add(grid_FileNamePattern);
+				{//conf grid_FileNamePattern:Grid
+					var o = grid_FileNamePattern;
+					o.ColumnDefinitions.AddRange([
+						new ColDef{Width = GL.Auto, SharedSizeGroup = "LabelGroup"}
+						,new ColDef{Width = new GL(8)}
+						,new ColDef{Width = GL.Star}
+						,new ColDef{Width = new GL(4)}
+
+						,new ColDef{Width = GL.Auto}
+					]);
+				}//~conf grid_FileNamePattern:Grid
+				{{//grid_FileNamePattern:Grid
+					//
+					var label = new Label{};
+					grid_FileNamePattern.Children.Add(label);
+					{
+						var o = label;
+						//Grid.SetColumn(o, 1);
+						o.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center;
+						o.Content = "Filename _Pattern:";
+						//o.Target="FilenamePatternBox" //TODO
+					}
+					var FilenamePatternBox = new AutoCompleteBox();
+					grid_FileNamePattern.Children.Add(FilenamePatternBox);
+					{//conf FilenamePatternBox:AutoCompleteBox
+						var o = FilenamePatternBox;
+						o.Name = nameof(FilenamePatternBox);
+						Grid.SetColumn(o, 2);
+						ToolTip.SetTip(o, Resx.FileNamePatternToolTip);
+						o.Bind(
+							AutoCompleteBox.ItemsSourceProperty
+							,new Bd(nameof(ctx.SavedFileNamePatterns))
+						);
+						o.Bind(
+							AutoCompleteBox.TextProperty
+							,new Bd(nameof(ctx.FileNamePattern)){Mode = BdM.TwoWay}
+						);
+						o.Bind(
+							AutoCompleteBox.IsEnabledProperty
+							,new MultiBinding{
+								Converter = AllTrueToTrueConverter.inst
+								,Bindings = [
+									new Bd(nameof(ctx.IsBusy)){
+										Converter = BoolToInvertedBoolConverter.inst
+									}
+									// ,new Bd(nameof(CheckBox.IsChecked)){
+									// 	Source = //TODO
+									// }
+								]
+							}
+						);
+					}//~conf FilenamePatternBox:AutoCompleteBox
+					var icon = new TextBlock{};
+					grid_FileNamePattern.Children.Add(icon);
+					{//conf icon:TextBlock
+						var o = icon;
+						o.Classes.Add("icon");//TODO nameof
+						Grid.SetColumn(o, 4);
+						ToolTip.SetTip(o, Resx.FileNamePatternToolTip);
+						o.Text = this.FindResource("CircleInfo") as str;
+					}//~conf icon:TextBlock
+				}}//~grid_FileNamePattern:Grid
+				var grid_Extensions = new Grid();
+				stackPanel.Children.Add(grid_Extensions);
+				{//conf grid_Extensions:Grid
+					var o = grid_Extensions;
+					o.ColumnDefinitions.AddRange([
+						new ColDef{Width = GL.Auto, SharedSizeGroup = "LabelGroup"}
+						,new ColDef{Width = new GL(8)}
+						,new ColDef{Width = GL.Star}
+						,new ColDef{Width = new GL(4)}
+						
+						,new ColDef{Width = GL.Auto}
+					]);
+				}//~conf grid_Extensions:Grid
+				{{//grid_Extensions:Grid
+					var label = new Label{};
+					grid_Extensions.Children.Add(label);
+					{//conf label:Label
+						var o = label;
+						o.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center;
+						o.Content = "_Extensions: ";
+						//o.Target = //TODO
+					}//~conf label:Label
+
+					var IncludedExtensionsBox = new AutoCompleteBox();
+					grid_Extensions.Children.Add(IncludedExtensionsBox);
+					{//conf IncludedExtensionsBox:AutoCompleteBox
+						var o = IncludedExtensionsBox;
+						o.Name = nameof(IncludedExtensionsBox);
+						Grid.SetColumn(o, 2);
+						ToolTip.SetTip(o, Resx.IncludedExtensionsToolTip);
+						o.Bind(
+							AutoCompleteBox.IsEnabledProperty
+							,new Bd(nameof(ctx.IsBusy))
+						);
+						o.Bind(
+							AutoCompleteBox.ItemsSourceProperty
+							,new Bd(nameof(ctx.SavedIncludedExtensions))
+						);
+						o.Bind(
+							AutoCompleteBox.TextProperty
+							,new Bd(nameof(ctx.IncludedExtensions)){Mode = BdM.TwoWay}
+						);
+					}//~conf IncludedExtensionsBox:AutoCompleteBox
+					var icon = new TextBlock{};
+					grid_Extensions.Children.Add(icon);
+					{//conf icon:TextBlock
+						var o = icon;
+						Grid.SetColumn(o, 4);
+						o.Classes.Add("icon");//TODO nameof
+						ToolTip.SetTip(o, Resx.IncludedExtensionsToolTip);
+						o.Text = this.FindResource("CircleInfo") as str;
+					}//~conf icon:TextBlock
+				}}//grid_Extensions:Grid
+				var grid_minSize = new Grid();
+				stackPanel.Children.Add(grid_minSize);
+				{//conf grid_minSize:Grid
+					var o = grid_minSize;
+					o.ColumnDefinitions.AddRange([
+						new ColDef{Width = GL.Auto, SharedSizeGroup = "LabelGroup"}
+						,new ColDef{Width = new GL(8)}
+						,new ColDef{Width = GL.Auto}
+						,new ColDef{Width = new GL(8)}
+						,new ColDef{Width = GL.Auto}
+						,new ColDef{Width = GL.Star}
+					]);
+
+				}//~conf grid_minSize:Grid
+				{{//grid_minSize:Grid
+					var label = new Label{};
+					grid_minSize.Children.Add(label);
+					{//conf label:Label
+						var o = label;
+						o.Content = "Mi_nimum Size:";
+						o.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center;
+						//o.Target = //TODO
+					}//~conf label:Label
+					var MinSizeBox = new NumericUpDown();
+					grid_minSize.Children.Add(MinSizeBox);
+					{//conf MinSizeBox:NumericUpDown
+						var o = MinSizeBox;
+						o.Name = nameof(MinSizeBox);
+						Grid.SetColumn(o, 2);
+						o.MinWidth = 128.0;
+						o.TextAlignment = Avalonia.Media.TextAlignment.Right;
+						o.FormatString = "N0";
+						o.Maximum = i64.MaxValue;
+						o.Minimum = 0;
+						o.Bind(
+							NumericUpDown.IsEnabledProperty
+							,new Bd(nameof(ctx.IsBusy)){
+								Converter = BoolToInvertedBoolConverter.inst
+							}
+						);
+						o.Bind(
+							NumericUpDown.ValueProperty
+							,new Bd(nameof(ctx.MinimumFileLength)){
+								Mode = BdM.TwoWay
+								,Converter = BytesToKilobytesConverter.inst
+							}
+						);
+					}//~conf MinSizeBox:NumericUpDown
+					var kb = new TextBlock();
+					grid_minSize.Children.Add(kb);
+					{
+						var o = kb;
+						Grid.SetColumn(o, 4);
+						o.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center;
+						o.Text = "KB";
+					}
+				}}//~grid_minSize:Grid
+				var grid_dateCreated = _dateGrid(
+					"Da_te Created:"
+					,nameof(ctx.MatchDateCreated)
+					,nameof(ctx.DateCreatedTo)
+				);
+				stackPanel.Children.Add(grid_dateCreated);
+
+				var grid_dateModified = _dateGrid(
+					"Date _Modified:"
+					,nameof(ctx.MatchDateModified)
+					,nameof(ctx.DateModifiedTo)
+				);
+				stackPanel.Children.Add(grid_dateModified);
+
+				
+			}}//~stackPanel:StackPanel
+		}}//~ans:Expander
+		return ans;
+	}
+
+	protected Control _dateGrid(
+		str chkBoxContent
+		,str chkBoxBd_IsChecked
+		,str bd_datePicker_SelectedDate
+	){
+		var ans = new Grid();
+		{//conf grid_dateCreated:Grid
+			var o = ans;
+			o.ColumnDefinitions.AddRange([
+				new ColDef{Width = GL.Auto, SharedSizeGroup = "LabelGroup"}
+				,new ColDef{Width = new GL(8)}
+				,new ColDef{Width = GL.Auto}
+				,new ColDef{Width = new GL(8)}
+
+				,new ColDef{Width = GL.Auto}
+				,new ColDef{Width = new GL(16)}
+				,new ColDef{Width = GL.Auto}
+				,new ColDef{Width = new GL(8)}
+
+				,new ColDef{Width = GL.Auto}
+				,new ColDef{Width = new GL(8)}
+				,new ColDef{Width = GL.Auto}
+				,new ColDef{Width = GL.Star}
+			]);
+		}//~conf grid_dateCreated:Grid
+		{{//grid_dateCreated:Grid
+			var DateCheckBox = new CheckBox();
+			ans.Children.Add(DateCheckBox);
+			{//conf DateCreatedCheckBox:CheckBox
+				var o = DateCheckBox;
+				//o.Name = nameof(DateCheckBox);
+				o.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center;
+				o.Content = chkBoxContent;
+				o.Bind(
+					CheckBox.IsEnabledProperty
+					,new Bd(nameof(ctx.IsBusy)){
+						Converter = BoolToInvertedBoolConverter.inst
+					}
+				);
+				o.Bind(
+					CheckBox.IsCheckedProperty
+					,new Bd(chkBoxBd_IsChecked){Mode=BdM.TwoWay}
+				);
+			}//conf DateCreatedCheckBox:CheckBox
+			var label_from = new Label();
+			ans.Children.Add(label_from);
+			{//conf label_from:Label
+				var o = label_from;
+				Grid.SetColumn(o, 2);
+				o.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center;
+				o.Content = "From";
+			}//~conf label_from:Label
+			var DateCreatedFromDatePicker = new CalendarDatePicker();
+			ans.Children.Add(DateCreatedFromDatePicker);
+			{//conf DateCreatedFromDatePicker:CalendarDatePicker
+				var o = DateCreatedFromDatePicker;
+				Grid.SetColumn(o, 4);
+				o.Name = nameof(DateCreatedFromDatePicker);
+				o.Bind(
+					CalendarDatePicker.SelectedDateProperty
+					,new Bd(nameof(ctx.DateCreatedFrom)){Mode=BdM.TwoWay}
+				);
+				o.Bind(
+					CalendarDatePicker.IsEnabledProperty
+					,new MultiBinding{
+						Converter = AllTrueToTrueConverter.inst
+						,Bindings = [
+							new Bd(nameof(CheckBox.IsChecked)){
+								Source = DateCheckBox
+							}
+							,new Bd(nameof(ctx.IsBusy)){
+								Converter = BoolToInvertedBoolConverter.inst
+							}
+						]
+					}
+				);
+			}//~conf DateCreatedFromDatePicker:CalendarDatePicker
+			var label_to = new Label();
+			ans.Children.Add(label_to);
+			{//conf label_to:Label
+				var o = label_to;
+				Grid.SetColumn(o, 6);
+				o.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center;
+				o.Content = "To";
+			}//~conf label_to:Label
+			var DateCreatedToDatePicker = new CalendarDatePicker();
+			ans.Children.Add(DateCreatedToDatePicker);
+			{//conf DateCreatedToDatePicker:CalendarDatePicker
+				var o = DateCreatedToDatePicker;
+				Grid.SetColumn(o, 8);
+				o.Bind(
+					CalendarDatePicker.SelectedDateProperty
+					,new Bd(bd_datePicker_SelectedDate){Mode=BdM.TwoWay}
+				);
+				o.Bind(
+					CalendarDatePicker.IsEnabledProperty
+					,new MultiBinding{
+						Converter = AllTrueToTrueConverter.inst
+						,Bindings = [
+							new Bd(nameof(CheckBox.IsChecked)){
+								Source = DateCheckBox
+							}
+							,new Bd(nameof(ctx.IsBusy)){
+								Converter = BoolToInvertedBoolConverter.inst
+							}
+						]
+					}
+				);
+			}
+			//TODO toolTipIcon略
+		}}//~grid_dateCreated:Grid
+		return ans;
 	}
 }

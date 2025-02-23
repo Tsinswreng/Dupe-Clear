@@ -7,6 +7,8 @@ using System.Globalization;
 namespace DupeClear.Converters;
 
 public class BytesToKilobytesConverter : IValueConverter {
+	protected static BytesToKilobytesConverter? _inst = null;
+	public static BytesToKilobytesConverter inst => _inst ??= new BytesToKilobytesConverter();
 	public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture) {
 		if (value is long bytes) {
 			return (decimal)(bytes / 1024);

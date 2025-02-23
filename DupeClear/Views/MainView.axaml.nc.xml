@@ -397,6 +397,7 @@
 													<ColumnDefinition Width="8" />
 													<ColumnDefinition Width="*" />
 													<ColumnDefinition Width="4" />
+													
 													<ColumnDefinition Width="auto" />
 												</Grid.ColumnDefinitions>
 
@@ -433,6 +434,7 @@
 													<ColumnDefinition Width="8" />
 													<ColumnDefinition Width="*" />
 													<ColumnDefinition Width="4" />
+													
 													<ColumnDefinition Width="auto" />
 												</Grid.ColumnDefinitions>
 
@@ -492,10 +494,12 @@
 													<ColumnDefinition Width="8" />
 													<ColumnDefinition Width="auto" />
 													<ColumnDefinition Width="8" />
+
 													<ColumnDefinition Width="auto" />
 													<ColumnDefinition Width="16" />
 													<ColumnDefinition Width="auto" />
 													<ColumnDefinition Width="8" />
+
 													<ColumnDefinition Width="auto" />
 													<ColumnDefinition Width="8" />
 													<ColumnDefinition Width="auto" />
