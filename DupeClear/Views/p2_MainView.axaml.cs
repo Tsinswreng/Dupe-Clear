@@ -43,6 +43,8 @@ using BdM = Avalonia.Data.BindingMode;
 using GL = Avalonia.Controls.GridLength;
 using ColDef = Avalonia.Controls.ColumnDefinition;
 using RowDef = Avalonia.Controls.RowDefinition;
+using Avalonia.Controls.Primitives;
+using Avalonia.Controls.Shapes;
 #endregion
 
 
@@ -145,6 +147,11 @@ public partial class MainView{
 	}
 
 	protected byte _render(){
+		var z = this;
+		z.Name = "MainUserControl";
+		z.Loaded += UserControl_Loaded;
+		z.DataContextChanged += UserControl_DataContextChanged;
+
 		var MainGrid = new Grid();
 		Content = MainGrid;
 		MainGrid.Name = nameof(MainGrid);
@@ -161,6 +168,8 @@ public partial class MainView{
 		Grid.SetRow(MainTabControl, 1);
 		{{//MainTabControl:TabControl
 			MainTabControl.Items.Add(_tab_location());
+			MainTabControl.Items.Add(_tab_Exclusions());
+			MainTabControl.Items.Add(_tab_Results());
 		}}//~MainTabControl:TabControl
 
 		return 0;
@@ -280,8 +289,14 @@ public partial class MainView{
 						}}//~grid3:Grid
 					}}//~border:Border
 				}}//~grid2:Grid
+				var searchBtns = _searchBtns();
+				grid.Children.Add(searchBtns);
+				{//conf searchBtns:Grid
+					var o = searchBtns;
+					Grid.SetColumn(o, 2);
+					Grid.SetRowSpan(o, 3);
+				}//~conf searchBtns:Grid
 			}}//~grid:Grid
-			//
 		}}//~Locations:TabItem
 		return Locations;
 	}
@@ -440,7 +455,7 @@ public partial class MainView{
 				{{//About:MenuItem
 					About.Bind(
 						MenuItem.CommandProperty
-						,new Bd(nameof(ctx.ShowAboutCommand)) //TODO 不效、宜察原ʹ叶
+						,new Bd(nameof(ctx.ShowAboutCommand))
 					);
 				}}//~About:MenuItem
 			}}//~HelpMenuItem:MenuItem
@@ -946,8 +961,6 @@ public partial class MainView{
 					,nameof(ctx.DateModifiedTo)
 				);
 				stackPanel.Children.Add(grid_dateModified);
-
-				
 			}}//~stackPanel:StackPanel
 		}}//~ans:Expander
 		return ans;
@@ -1066,4 +1079,355 @@ public partial class MainView{
 		}}//~grid_dateCreated:Grid
 		return ans;
 	}
+
+	protected Control _searchBtns(){
+		var ans = new StackPanel();
+		{//conf searchBtns:StackPanel
+			var o = ans;
+			o.Spacing = 4.0;
+			var sty_btn = new Style(x=>
+				x.OfType<Button>()
+			);
+			o.Styles.Add(sty_btn);
+			sty_btn.Setters.Add(new Setter{
+				Property = Button.WidthProperty
+				,Value = 160.0
+			});
+		}//~conf searchBtns:StackPanel
+		{{//ans:StackPanel
+			var btn_addFolder = new Button();
+			ans.Children.Add(btn_addFolder);
+			{//conf btn_addFolder:Button
+				var o = btn_addFolder;
+				o.Content = "_Add Folder";
+				o.Bind(
+					Button.CommandParameterProperty
+					,new Bd(nameof(ctx.AddDirectoryForExclusionCommand))
+				);
+			}//~conf btn_addFolder:Button
+			var btn_removeFolder = new Button();
+			ans.Children.Add(btn_removeFolder);
+			{//conf btn_removeFolder:Button
+				var o = btn_removeFolder;
+				o.Content = "_Remove Folder";
+				o.Bind(
+					Button.CommandProperty
+					,new Bd(nameof(ctx.RemoveIncludedDirectoryCommand))
+				);
+			}//~conf btn_removeFolder:Button
+
+			var chkBox_includeSubfolders = new CheckBox();
+			ans.Children.Add(chkBox_includeSubfolders);
+			{//conf chkBox_includeSubfolders:CheckBox
+				var o = chkBox_includeSubfolders;
+				o.Content = "_Include Subfolders";
+				o.Bind(
+					CheckBox.IsEnabledProperty
+					,new Bd(nameof(ctx.IsBusy)){
+						Converter = BoolToInvertedBoolConverter.inst
+					}
+				);
+				o.Bind(
+					CheckBox.IsCheckedProperty
+					,new Bd(nameof(ctx.IncludeSubdirectories)){Mode=BdM.TwoWay}
+				);
+			}//~conf chkBox_includeSubfolders:CheckBox
+			ans.Children.Add(new Border(){Height = 32.0});
+
+			var btn_start = new Button();
+			ans.Children.Add(btn_start);
+			{//conf btn_start:Button
+				var o = btn_start;
+				o.FontWeight = FontWeight.Bold;
+				o.Bind(
+					Button.BackgroundProperty
+					,new DynamicResourceExtension("DupeClearStartButtonBackgroundBrush")
+				);
+				o.Bind(
+					ForegroundProperty
+					,new DynamicResourceExtension("DupeClearStartButtonForegroundBrush")
+				);
+				o.Bind(
+					Button.CommandProperty
+					,new Bd(nameof(ctx.SearchCommand))
+				);
+			}//~conf btn_start:Button
+			{{//btn_start:Button
+				var stackPanel = new StackPanel();
+				btn_start.Content = stackPanel;
+				{//conf stackPanel:StackPanel
+					var o = stackPanel;
+					o.Orientation = Avalonia.Layout.Orientation.Horizontal;
+					o.Spacing = 4.0;
+				}//~conf stackPanel:StackPanel
+				{{//stackPanel:StackPanel
+					var icon = new TextBlock();
+					stackPanel.Children.Add(icon);
+					{//conf icon:TextBlock
+						var o = icon;
+						o.Classes.Add("icon");//TODO nameof
+						o.Text = this.FindResource("MagnifyingGlass") as str;
+					}//~conf icon:TextBlock
+					
+					stackPanel.Children.Add(new Label{Content="_Start"});
+				}}//~stackPanel:StackPanel
+			}}//btn_start:Button
+		}}//ans:StackPanel
+		return ans;
+	}
+
+
+	protected Control _tab_Exclusions(){
+		var ans = new TabItem(){Header = "Exclusions"};
+		{{//ans:TabItem
+			var grid = new Grid();
+			ans.Content = grid;
+			{//conf grid:Grid
+				var o = grid;
+				o.ColumnDefinitions.AddRange([
+					new ColDef{Width = GL.Star}
+					,new ColDef{Width = new GL(8)}
+					,new ColDef{Width = GL.Auto}
+				]);
+
+				o.RowDefinitions.AddRange([
+					new RowDef{Height = GL.Star}
+					,new RowDef{Height = new GL(16)}
+					,new RowDef{Height = GL.Auto}
+				]);
+			}//~conf grid:Grid
+			{{//grid:Grid
+				//TODO 略
+			}}//~grid:Grid
+		}}//~ans:TabItem
+
+		return ans;
+	}
+
+
+	protected Control _tab_Results(){
+		var ans = new TabItem(){Header = "Results"};
+		{{//ans:TabItem
+			var grid = new Grid();
+			ans.Content = grid;
+			{//conf grid:Grid
+				var o = grid;
+				o.RowDefinitions.AddRange([
+					new RowDef{Height = GL.Auto}
+					,new RowDef{Height = new GL(8)}
+					,new RowDef{Height = GL.Star}
+				]);
+				o.ShowGridLines = true;//t
+			}//~conf grid:Grid
+			{{//grid:Grid
+				var grid_toolBar = new Grid();
+				grid.Children.Add(grid_toolBar);
+				{//conf grid_toolBar:Grid
+					var o = grid_toolBar;
+					o.ColumnDefinitions.AddRange([
+						new ColDef{Width = GL.Auto}
+						,new ColDef{Width = GL.Star}
+						,new ColDef{Width = GL.Auto}
+					]);
+					o.ShowGridLines = true;//t
+				}//conf grid_toolBar:Grid
+				{{//grid_toolBar:Grid
+					var stackPanel = new StackPanel();
+					grid_toolBar.Children.Add(stackPanel);
+					{//conf stackPanel:StackPanel
+						var o = stackPanel;
+						o.Orientation = Avalonia.Layout.Orientation.Horizontal;
+						o.Spacing = 4.0;
+						var sty_btn = new Style(x=>
+							Selectors.Or(
+								x.OfType<Button>()
+								,x.OfType<DropDownButton>()
+								,x.OfType<ToggleButton>()
+							)
+						);
+						o.Styles.Add(sty_btn);
+						sty_btn.Setters.Add(new Setter{
+							Property = Button.HeightProperty
+							,Value = 32.0
+						});
+						sty_btn.Setters.Add(new Setter{
+							Property = VerticalAlignmentProperty
+							,Value = Avalonia.Layout.VerticalAlignment.Center
+						});
+
+						var sty_rectangle = new Style(x=>
+							x.OfType<Rectangle>()
+						);
+						o.Styles.Add(sty_rectangle);
+						sty_rectangle.Setters.Add(new Setter{
+							Property = Rectangle.MarginProperty
+							,Value = new Thickness(4,0)
+						});
+						sty_rectangle.Setters.Add(new Setter{
+							Property = Rectangle.WidthProperty
+							,Value = 1.0
+						});
+						sty_rectangle.Setters.Add(new Setter{
+							Property = Rectangle.FillProperty
+							,Value = new DynamicResourceExtension("DupeClearBorderBrush")
+						});
+					}//~conf stackPanel:StackPanel
+					{{//stackPanel:StackPanel
+						var btn_import = new Button();
+						stackPanel.Children.Add(btn_import);
+						{//conf btn_import:Button
+							var o = btn_import;
+							ToolTip.SetTip(o, "Import");
+							o.Bind(
+								Button.CommandProperty
+								,new Bd(nameof(ctx.ImportCommand))
+							);
+							var icon = new TextBlock();
+							o.Content = icon;
+							{//conf icon:TextBlock
+								var p = icon;
+								//p.Classes.AddRange(["icon", "regular"]);//TODO nameof
+								//p.Classes.Add("icon");//TODO 加此則報錯 Unable to cast object of type 'Avalonia.UnsetValueType' to type 'Avalonia.Media.FontFamily'. 
+								p.Classes.Add("regular");
+								p.Text = this.FindResource("FolderOpen") as str;
+							}//~conf icon:TextBlock
+						}//~conf btn_import:Button
+						var btn_export = new Button();
+						stackPanel.Children.Add(btn_export);
+						{//conf btn_export:Button
+							var o = btn_export;
+							ToolTip.SetTip(o, "Export");
+							o.Bind(
+								Button.CommandProperty
+								,new Bd(nameof(ctx.ExportCommand))
+							);
+							var icon = new TextBlock();
+							o.Content = icon;
+							{//conf icon:TextBlock
+								var p = icon;
+								p.Classes.Add("icon");//TODO nameof	
+								p.Text = this.FindResource("FloppyDisk") as str;
+							}//~conf icon:TextBlock
+						}//~conf btn_export:Button
+						var btn_mark = new DropDownButton();
+						stackPanel.Children.Add(btn_mark);
+						{//conf btn_mark:DropDownButton
+							var o = btn_mark;
+						}//~conf btn_mark:DropDownButton
+						{{//btn_mark:DropDownButton
+							var dropDownStackPanel = new StackPanel();
+							btn_mark.Content = dropDownStackPanel;
+							{//conf dropDownStackPanel:StackPanel
+								var o = dropDownStackPanel;
+								o.Orientation = Avalonia.Layout.Orientation.Horizontal;
+								o.Spacing = 4.0;
+							}//~conf dropDownStackPanel:StackPanel
+							{{//dropDownStackPanel:StackPanel
+								var icon = new TextBlock();
+								dropDownStackPanel.Children.Add(icon);
+								{//conf icon:TextBlock
+									var p = icon;
+									p.Classes.Add("icon");//TODO nameof
+									p.Text = this.FindResource("ListCheck") as str;
+								}//~conf icon:TextBlock
+							}}//~dropDownStackPanel:StackPanel
+							var menuFlyout = new MenuFlyout();
+							btn_mark.Flyout = menuFlyout;
+							{
+								var o = menuFlyout;
+								o.Placement = PlacementMode.BottomEdgeAlignedLeft;//TODO ?
+							}
+							{{//menuFlyout:MenuFlyout
+								var byDate = new MenuItem(){Header = "By Date _Modified"};
+								menuFlyout.Items.Add(byDate);
+								{//conf byDate:MenuItem
+									var o = byDate;
+									//TODO 略
+								}//~conf byDate:MenuItem
+
+							}}//~menuFlyout:MenuFlyout
+						}}//~btn_mark:DropDownButton
+
+						//TODO 略
+					}}//~stackPanel:StackPanel
+					var previewStackPanel = new StackPanel();
+					grid_toolBar.Children.Add(previewStackPanel);
+					{
+						var o = previewStackPanel;
+						Grid.SetColumn(o, 2);
+						o.Orientation = Avalonia.Layout.Orientation.Horizontal;
+					}
+					{{//previewStackPanel:StackPanel
+						var label = new Label();
+						previewStackPanel.Children.Add(label);
+						{
+							var o = label;
+							o.Content = "_Preview";
+							//o.Target //TODO
+						}
+						var PreviewToggleSwitch = new ToggleButton();
+						previewStackPanel.Children.Add(PreviewToggleSwitch);
+						{//conf switch_preview:ToggleButton
+							var o = PreviewToggleSwitch;
+							o.Name = nameof(PreviewToggleSwitch);
+							o.Padding = new Thickness(0);
+							o.Width = 40.0;
+							o.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Stretch;
+							o.VerticalContentAlignment = Avalonia.Layout.VerticalAlignment.Center;
+							//TODO OnContent="" OffContent=""
+							o.Bind(
+								ToggleButton.IsCheckedProperty
+								,new Bd(nameof(ctx.ShowPreview)){Mode=BdM.TwoWay}
+							);
+						}//~conf switch_preview:ToggleButton
+					}}//~previewStackPanel:StackPanel
+				}}//~grid_toolBar:Grid
+				var grid2 = new Grid();
+				grid.Children.Add(grid2);
+				{//conf grid2:Grid
+					var o = grid2;
+					Grid.SetRow(o, 2);
+					var cd = new ColDef();
+					cd.Bind(
+						ColDef.WidthProperty
+						,new Bd(nameof(ctx.PreviewPaneWidth)){
+							Mode=BdM.TwoWay
+							,Converter = IntToGridLengthConverter.inst
+							,Source = ctx
+						}
+					);
+					o.ColumnDefinitions.AddRange([
+						new ColDef{Width = GL.Star}
+						,new ColDef{Width = GL.Auto}
+						,cd
+					]);
+				}//~conf grid2:Grid
+				{{//grid2:Grid
+					var ResultsGrid = new DataGrid();
+					grid2.Children.Add(ResultsGrid);
+					{//conf ResultsGrid:DataGrid
+						var o = ResultsGrid;
+						o.Name = nameof(ResultsGrid);
+						o.GridLinesVisibility = DataGridGridLinesVisibility.All;//t
+						o.CanUserResizeColumns = true;
+						o.CanUserSortColumns = false;
+						o.SelectionMode = DataGridSelectionMode.Extended;//TODO ?
+						o.Bind(
+							DataGrid.SelectedItemProperty
+							,new Bd(nameof(ctx.SelectedDuplicateFile)){Mode=BdM.TwoWay}
+						);
+						o.Bind(
+							DataGrid.ItemsSourceProperty
+							,new Bd(nameof(ctx.DuplicateFiles))
+						);
+						//var AlternateRowTheme = new ControlTheme();
+						
+					}//~conf ResultsGrid:DataGrid
+				}}//~grid2:Grid
+			}}//~grid:Grid
+		}}//~ans:TabItem
+		return ans;
+	}
+
+
 }

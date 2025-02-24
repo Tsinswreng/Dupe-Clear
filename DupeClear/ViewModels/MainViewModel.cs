@@ -71,6 +71,7 @@ public partial class MainViewModel : ViewModelBase {
 
 	public FilePickerDelegate? AsyncFilePicker { get; set; }
 
+//# 被賦值于 MainView.axaml.cs:UserControl_DataContextChanged
 	public Func<MessageBoxViewModel, Task<MessageBoxResult?>>? MessageBox { get; set; }
 
 	private bool _includeSubdirectories;
@@ -1877,7 +1878,7 @@ public partial class MainViewModel : ViewModelBase {
 		var name = assm.GetCustomAttribute<AssemblyProductAttribute>()?.Product;
 		var version = assm.GetName().Version;
 		var copyright = assm.GetCustomAttribute<AssemblyCopyrightAttribute>()?.Copyright;
-		//System.Console.WriteLine(MessageBox==null); true
+		//System.Console.WriteLine(MessageBox==null);// true
 		MessageBox?.Invoke(new MessageBoxViewModel() {
 			Title = "About",
 			Header = $"{name} v{version}",

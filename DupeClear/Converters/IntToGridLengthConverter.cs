@@ -8,6 +8,9 @@ using System.Globalization;
 namespace DupeClear.Converters;
 
 public class IntToGridLengthConverter : IValueConverter {
+
+	protected static IntToGridLengthConverter? _inst = null;
+	public static IntToGridLengthConverter inst => _inst??= new IntToGridLengthConverter();
 	public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture) {
 		if (value is int length) {
 			return new GridLength(length);

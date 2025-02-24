@@ -18,6 +18,7 @@ public partial class MessageBoxWindow : Window {
 		InitializeComponent();
 	}
 
+	//# on Windows
 	public MessageBoxWindow(IWindowService windowService) : this() {
 		_windowService = windowService;
 	}

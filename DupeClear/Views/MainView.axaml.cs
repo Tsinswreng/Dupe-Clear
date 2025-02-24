@@ -28,6 +28,7 @@ public partial class MainView : UserControl {
 		DataContext = new MainViewModel();
 		_style();
 		_render();
+		DataContext = new MainViewModel();
 		// InitializeComponent();
 		
 		// IncludedDirectoriesListBox.AddHandler(DragDrop.DragOverEvent, IncludedDirectoriesListBox_DragOver);
@@ -253,7 +254,7 @@ public partial class MainView : UserControl {
 				window = new MessageBoxWindow();
 			}
 			else {
-				window = new MessageBoxWindow(_windowService);
+				window = new MessageBoxWindow(_windowService);//on Windows(IWindowsService只有Windows平臺之叶)
 			}
 
 			window.DataContext = viewModel;
